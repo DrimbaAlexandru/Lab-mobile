@@ -1,0 +1,10 @@
+D:\git\PC\gym-application\Gym Application\Business Layer\bin\Debug\Business Layer.exe.config
+D:\git\PC\gym-application\Gym Application\Business Layer\bin\Debug\Business Layer.exe
+D:\git\PC\gym-application\Gym Application\Business Layer\bin\Debug\Business Layer.pdb
+D:\git\PC\gym-application\Gym Application\Business Layer\bin\Debug\DAL.exe
+D:\git\PC\gym-application\Gym Application\Business Layer\bin\Debug\EntityFramework.dll
+D:\git\PC\gym-application\Gym Application\Business Layer\bin\Debug\DAL.pdb
+D:\git\PC\gym-application\Gym Application\Business Layer\bin\Debug\EntityFramework.xml
+D:\git\PC\gym-application\Gym Application\Business Layer\obj\Debug\Business Layer.csprojResolveAssemblyReference.cache
+D:\git\PC\gym-application\Gym Application\Business Layer\obj\Debug\Business Layer.exe
+D:\git\PC\gym-application\Gym Application\Business Layer\obj\Debug\Business Layer.pdb
