@@ -1,0 +1,111 @@
+<br><br><br>
+<!--Container for activities-->
+<div class = "container" >
+    <div class="row">
+        <h4 class="col-xs-6">Curse</h4>
+        <div class="col-xs-6"  style="text-align: right;">
+            <button type="button" class="btn btn-default" data-toggle="modal" data-target="#addCursaModal">
+                    Adauga cursa
+                </button>
+        </div>
+    </div>
+    <p *ngIf="curse.length == 0">Nu sunt curse!</p>
+    <div *ngIf="curse">
+        <div  class="col-md-4" *ngFor="let cursa of curse">
+            <div class="panel panel-default">
+                <div class="panel-body fixed-panel">
+                    <p><b>ID:</b> {{cursa.id}} </p>
+                    <p><b>Capacitate generala:</b> {{cursa.capacitate}} </p>
+                    <p><b>Nr. participanti:</b> {{cursa.participanti}} </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Modal for adding trip -->
+<div class="modal fade" id="addCursaModal" tabindex="-1" role="dialog" aria-labelledby="addCursaModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="addCursaModalLabel">Adauga cursa noua</h4>
+      </div>
+      <div class="modal-body">
+        <form>
+            <div class="form-group" novalidate>
+                <label for="id">ID</label>
+                <input type="text" class="form-control" name="id" [(ngModel)]="modelAdd.id" required />
+            </div>
+            <div class="form-group" novalidate>
+                <label for="capacitate">Capacitate generala</label>
+                <input type="text" class="form-control" name="capacitate" [(ngModel)]="modelAdd.capacitate" required />
+            </div>
+            <div class="form-group" novalidate>
+                <label for="participanti">Nr. participanti</label>
+                <input type="text" class="form-control" name="participanti" [(ngModel)]="modelAdd.participanti" required />
+            </div>
+        </form>
+        <div *ngIf="error" class="alert alert-danger">{{error}}</div>
+      </div> <!--/modal-body -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Inchidere</button>
+        <button type="button" class="btn btn-primary" (click)="addTrip()">Adaugare cursa</button>
+      </div>
+    </div> <!--/modal-content -->
+  </div>
+</div> <!-- Modal for adding trip -->
+
+<!-- Modal asking for deleting activity -->
+<div *ngIf="openModalFor" class="modal fade" id="deletingModal" tabindex="-1" role="dialog" aria-labelledby="deletingModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="deletingModalLabel">Stergere cursa</h4>
+      </div>
+      <div class="modal-body">
+        Cursa va fi stearsa permanent. Sigur doriti sa o stergeti?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" (click)="clearOpenModalFor">Close</button>
+        <button type="button" class="btn btn-primary" (click)="deleteTrip(openModalFor)" data-dismiss="modal">Yes, delete</button>
+      </div>
+    </div>
+  </div>
+</div> <!-- Modal asking for deleting activity -->
+
+
+<!-- Modal for editing trip -->
+<div *ngIf="openModalFor" class="modal fade" id="editingModal" tabindex="-1" role="dialog" aria-labelledby="editingModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="editingModalLabel">Editare cursa</h4>
+      </div>
+      <div class="modal-body">
+        <form>
+            <div class="form-group" novalidate>
+                <label for="id">ID</label>
+                <input type="text" class="form-control" name="id" [(ngModel)]="model.id" #id="ngModel" required />
+            </div>
+            <div class="form-group" novalidate>
+                <label for="capacitate">Capacitate generala</label>
+                <input type="text" class="form-control" name="capacitate" [(ngModel)]="model.capacitate" #capacitate="ngModel" required />
+            </div>
+            <div class="form-group" novalidate>
+                <label for="participanti">Numar participanti</label>
+                <input type="text" class="form-control" name="participanti" [(ngModel)]="model.participanti" #participanti="ngModel" required />
+            </div>
+        </form>
+      </div> <!--/modal-body -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="editTrip(openModalFor)">Edit trip</button>
+      </div>
+    </div> <!--/modal-content -->
+  </div>
+</div> <!-- Modal for editing trip -->

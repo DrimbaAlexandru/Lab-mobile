@@ -1,0 +1,30 @@
+@charset "UTF-8";
+/*Include custom fonts*/
+
+@font-face {
+  font-family: 'Dancing Script Bold';
+  src: url('../fonts/Dancing_Script/DancingScript-Bold.ttf');
+}
+
+@font-face {
+  font-family: 'Dancing Script Regular';
+  src: url('../fonts/Dancing_Script/DancingScript-Regular.ttf');
+}
+
+@font-face {
+  font-family: 'Ropa Sans Italic';
+  src: url('../fonts/Ropa_Sans/RopaSans-Italic.ttf');
+}
+
+@font-face {
+  font-family: 'Ropa Sans Regular';
+  src: url('../fonts/Ropa_Sans/RopaSans-Regular.ttf');
+}
+
+/*Override bootstrap variables with custom*/
+@import "_bootstrap-variables";
+
+/*Import bootstrap*/
+@import "../lib/bootstrap-sass/assets/stylesheets/bootstrap";
+
+@import "landing";

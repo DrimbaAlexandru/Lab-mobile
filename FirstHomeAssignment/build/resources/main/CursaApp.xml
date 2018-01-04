@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+    <util:properties id="jdbcProps1">
+        <prop key="tasks.jdbc.driver">org.sqlite.JDBC</prop>
+        <prop key="tasks.jdbc.url">jdbc:sqlite:cursa.db</prop>
+    </util:properties>
+
+    <util:properties id="jdbcProps" location="classpath:bd.config"/>
+
+    <bean id="cursa" class="model.Cursa">
+        <constructor-arg ref=""/>
+    <bean/>
+    <bean id="motociclist" class="model.Motociclist"/>
+
+</beans>

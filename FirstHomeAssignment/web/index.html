@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Curse</title>
+    <meta name="author" content="accesa" />
+    <meta name="keywords" content="angular,bootstrap,demo" />
+    <meta name="description" content="Angular 2 quick start template" />
+    <meta itemprop="copyrightYear" content="2016" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <base href="/">
+
+    <!--Custom fonts import-->
+    <link href='/fonts/Dancing_Script/DancingScript-Bold.ttf' rel='stylesheet' type='application/x-font-woff'>
+    <link href='/fonts/Dancing_Script/DancingScript-Regular.ttf' rel='stylesheet' type='application/x-font-woff'>
+    <link href='/fonts/Dancing_Script/RopaSans-Italic.ttf' rel='stylesheet' type='application/x-font-woff'>
+    <link href='/fonts/Dancing_Script/RopaSans-Regular.ttf' rel='stylesheet' type='application/x-font-woff'>
+
+      <!--Font awesome icons-->
+    <link rel="stylesheet" href="lib/font-awesome/css/font-awesome.min.css" type="text/css" />
+
+    <!--Bootstrap css-->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="lib/bootstrap-sass/css/bootstrap.min.css" type="text/css" />
+
+    <!--Main generated style-->
+    <link rel='stylesheet' href='scss/style.css' />
+
+    <!--Angular 2 requirements-->
+    <script src="node_modules/core-js/client/shim.min.js"></script>
+    <script src="node_modules/zone.js/dist/zone.js"></script>
+    <script src="node_modules/systemjs/dist/system.src.js"></script>
+    <script src="systemjs.config.js"></script>
+    <script>
+        System.import('app').catch(function(err) {
+            console.error(err);
+        });
+    </script>
+
+
+</head>
+
+<body class="no-select" spellcheck="false">   
+    <div class="col-xs-12">
+        <app> 
+            <div style="text-align: center; margin-top: 25%;">
+                <i class="fa fa-spinner fa-spin"></i>
+                <span>Loading...</span>
+            </div>
+        </app>
+    </div>
+</body>
+
+</html>

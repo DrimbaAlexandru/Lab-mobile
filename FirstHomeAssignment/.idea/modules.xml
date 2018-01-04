@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/FirstHomeAssignment.iml" filepath="$PROJECT_DIR$/.idea/modules/FirstHomeAssignment.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/FirstHomeAssignment_main.iml" filepath="$PROJECT_DIR$/.idea/modules/FirstHomeAssignment_main.iml" group="FirstHomeAssignment" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/FirstHomeAssignment_test.iml" filepath="$PROJECT_DIR$/.idea/modules/FirstHomeAssignment_test.iml" group="FirstHomeAssignment" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Rest/Rest.iml" filepath="$PROJECT_DIR$/.idea/modules/Rest/Rest.iml" group="Rest" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Rest/Rest_main.iml" filepath="$PROJECT_DIR$/.idea/modules/Rest/Rest_main.iml" group="Rest" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Rest/Rest_test.iml" filepath="$PROJECT_DIR$/.idea/modules/Rest/Rest_test.iml" group="Rest" />
+    </modules>
+  </component>
+</project>

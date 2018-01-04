@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="458.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <TableView fx:id="tabelCurse" layoutY="21.0" prefHeight="200.0" prefWidth="378.0">
+        <columns>
+          <TableColumn fx:id="columnCursa" prefWidth="75.0" text="Cursa" />
+          <TableColumn fx:id="columnCapacitate" prefWidth="75.0" text="Capacitate" />
+            <TableColumn fx:id="columnNrP" prefWidth="75.0" text="Nr. participanti" />
+        </columns>
+         <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+         </columnResizePolicy>
+      </TableView>
+      <TableView fx:id="tabelMotociclisti" layoutY="236.0" prefHeight="200.0" prefWidth="378.0">
+        <columns>
+          <TableColumn fx:id="columnId" prefWidth="75.0" text="ID" />
+          <TableColumn fx:id="columnNume" prefWidth="75.0" text="Nume" />
+            <TableColumn fx:id="columnCapacitateMotor" prefWidth="75.0" text="Capacitate" />
+            <TableColumn fx:id="columnEchipa" prefWidth="75.0" text="Echipa" />
+        </columns>
+         <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+         </columnResizePolicy>
+      </TableView>
+   </children>
+</AnchorPane>
