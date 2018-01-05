@@ -96,7 +96,10 @@ public class CurseService
                 db_srv.addCursa( c );
                 for( Motociclist m : rest_srv.getParticipanti( c.getId() ) )
                 {
-                    db_srv.addParticipare( new Participare().setCursaId( c.getId() ).setMotociclistId( m.getId() ) );
+                    Participare p = new Participare();
+                    p.setCursaId( c.getId() );
+                    p.setMotociclistId( m.getId() );
+                    db_srv.addParticipare( p );
                 }
             }
         }

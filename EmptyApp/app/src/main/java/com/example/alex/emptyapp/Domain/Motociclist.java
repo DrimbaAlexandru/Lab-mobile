@@ -1,7 +1,10 @@
 package com.example.alex.emptyapp.Domain;
 
+import android.arch.persistence.room.Entity;
+
 import java.util.Date;
 
+@Entity(tableName = "Motociclist")
 public class Motociclist extends BaseModel
     {
         private String nume;

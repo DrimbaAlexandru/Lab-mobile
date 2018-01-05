@@ -106,13 +106,13 @@ public class EditCurseActivity extends Activity
         {
             ( ( EditText )findViewById( R.id.txt_nume_cursa ) ).setText( cursa.getNume() );
             ( ( EditText )findViewById( R.id.txt_cap_cursa ) ).setText( cursa.getCapacitate() );
-            ( ( Button )findViewById( R.id.btn_update_class_name ) ).setText( "Update" );
+            ( ( Button )findViewById( R.id.btn_update_cursa ) ).setText( "Update" );
         }
         else
         {
             ( ( EditText )findViewById( R.id.txt_nume_cursa ) ).setText( "" );
             ( ( EditText )findViewById( R.id.txt_cap_cursa ) ).setText( "" );
-            ( ( Button )findViewById( R.id.btn_update_class_name ) ).setText( "Add" );
+            ( ( Button )findViewById( R.id.btn_update_cursa ) ).setText( "Add" );
         }
 
         //------------
@@ -165,7 +165,7 @@ public class EditCurseActivity extends Activity
                                                       populate_moto_details( srv.getMotociclist( motociclisti_ids.get( i ) ) );
                                                   } );
 
-        ( ( Button )findViewById( R.id.btn_update_class_name ) ).setOnClickListener( e->{
+        ( ( Button )findViewById( R.id.btn_update_cursa ) ).setOnClickListener( e->{
             onAddUpdateCursa();
         } );
         ( ( Button )findViewById( R.id.btn_moto_add ) ).setOnClickListener( e->{
