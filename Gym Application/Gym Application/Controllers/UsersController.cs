@@ -57,23 +57,6 @@ namespace Gym_Application.Controllers
             }
         }
 
-        //returns the classes for which the user is enrolled
-        [Route("api/users/{id_user}/enrolledClasses")]
-        [EnableCors(origins: "*", headers: "*", methods: "*")]
-        [HttpGet]
-        public IHttpActionResult EnrolledClasses(int id_user)
-        {
-            try
-            {
-                var service = new UserServices();
-                return Ok(service.EnrolledClassesIds(id_user));
-            }
-            catch (Exception)
-            {
-                return NotFound();
-            }
-        }
-
         [Route( "api/users" )]
         [EnableCors( origins: "*", headers: "*", methods: "*" )]
         [HttpGet]
@@ -88,68 +71,7 @@ namespace Gym_Application.Controllers
             return users;
 
         }
-
-        [Route( "api/feedback/{id}" )]
-        [EnableCors( origins: "*", headers: "*", methods: "*" )]
-        [HttpGet]
-        public IEnumerable<Feedback> GetFeedback( int id )
-        {
-            using( var uow = new UnitOfWork() )
-            {
-                var rez = from f in uow.Repository<Feedback>().findAll()
-                          where f.TrainerId == id
-                          select f;
-                return rez;
-            }
-        }
-
-        [Route( "api/feedback" )]
-        [EnableCors( origins: "*", headers: "*", methods: "*" )]
-        [HttpGet]
-        public IEnumerable<Feedback> GetFeedbacks( )
-        {
-            using( var uow = new UnitOfWork() )
-            {
-                return uow.Repository<Feedback>().findAll();
-            }
-        }
-
-        [Route( "api/feedback" )]
-        [EnableCors( origins: "*", headers: "*", methods: "*" )]
-        [HttpPost]
-        public IHttpActionResult GiveFeedback( [FromBody] Feedback feed )
-        {
-            using( var uow = new UnitOfWork() )
-            {
-                try
-                {
-                    bool done = false;
-                    foreach( Feedback fe in uow.Repository<Feedback>().findAll() )
-                    {
-                        if( fe.UserId == feed.UserId && fe.TrainerId == feed.TrainerId )
-                        {
-                            fe.Rating = feed.Rating;
-                            fe.Text = feed.Text;
-                            uow.Repository<Feedback>().Update( fe );
-                            feed.Id = fe.Id;
-                            done = true;
-                            break;
-                        }
-                    }
-                    if( !done )
-                    {
-                        uow.Repository<Feedback>().Save( feed );
-                    }
-                    uow.Save();
-                    return Ok( feed );
-                }
-                catch( Exception e )
-                {
-                    return NotFound();
-                }
-            }
-        }
-    
+                  
     }
        
 }

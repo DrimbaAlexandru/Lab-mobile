@@ -14,7 +14,6 @@ namespace Business_Layer.Mappers
         {
             User user = new User();
             user.Username = model.Username;
-            user.Role = (Role)Enum.ToObject(typeof(Role), model.Role);
             user.Name = model.Name;
             user.Email = model.Email;
             return user;
@@ -26,7 +25,6 @@ namespace Business_Layer.Mappers
             model.Id = user.Id;
             model.Username = user.Username;
             model.Name = user.Name;
-            model.Role = Convert.ToInt32(user.Role);
             return model;
         }
     }

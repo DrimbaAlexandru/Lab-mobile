@@ -9,12 +9,12 @@ namespace DAL.Repository
 {
     public class UnitOfWork : IDisposable
     {
-        private GymDBContext context;
+        private MotoDBContext context;
         private Dictionary<Type, object> repositories;
 
         public UnitOfWork()
         {
-            context = new GymDBContext();
+            context = new MotoDBContext();
             repositories = new Dictionary<Type, object>();
         }
 

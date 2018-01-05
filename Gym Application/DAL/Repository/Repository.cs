@@ -10,10 +10,10 @@ namespace DAL.Repository
 {
     internal class Repository<TEntity> : IRepository<TEntity> where TEntity : BaseModel
     {
-        internal GymDBContext context;
+        internal MotoDBContext context;
         internal DbSet<TEntity> dbSet;
 
-        public Repository(GymDBContext ctx)
+        public Repository(MotoDBContext ctx)
         {
             context = ctx;
             dbSet = context.Set<TEntity>();
