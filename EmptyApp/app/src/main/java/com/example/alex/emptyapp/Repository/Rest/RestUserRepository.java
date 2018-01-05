@@ -1,14 +1,11 @@
 package com.example.alex.emptyapp.Repository.Rest;
 
-import com.example.alex.emptyapp.Domain.Feedback;
 import com.example.alex.emptyapp.Domain.User;
-import com.example.alex.emptyapp.Repository.Interfaces.IUserRepository;
 
 import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
-import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;

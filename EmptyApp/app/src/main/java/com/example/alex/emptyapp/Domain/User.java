@@ -6,7 +6,7 @@ import android.arch.persistence.room.Ignore;
 import java.util.HashSet;
 import java.util.Set;
 
-@Entity(tableName = "GymUser")
+@Entity(tableName = "AppUser")
 public class User extends BaseModel
 {
     public User()
@@ -14,14 +14,8 @@ public class User extends BaseModel
     }
 
     private String Username;
-    private Role Role;
     private String Name;
-
     private String Email;
-
-    public Role getRole() {
-        return Role;
-    }
 
     public String getEmail() {
         return Email;
@@ -41,10 +35,6 @@ public class User extends BaseModel
 
     public void setName(String name) {
         Name = name;
-    }
-
-    public void setRole(Role role) {
-        Role = role;
     }
 
     public void setUsername(String username) {

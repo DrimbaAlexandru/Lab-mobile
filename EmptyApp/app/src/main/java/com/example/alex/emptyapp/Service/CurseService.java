@@ -3,26 +3,19 @@ package com.example.alex.emptyapp.Service;
 import android.arch.persistence.room.Room;
 import android.content.Context;
 
-import com.example.alex.emptyapp.Domain.ClassSchedule;
-import com.example.alex.emptyapp.Domain.Difficulty;
-import com.example.alex.emptyapp.Domain.Feedback;
-import com.example.alex.emptyapp.Domain.GymClass;
-import com.example.alex.emptyapp.Domain.Role;
+import com.example.alex.emptyapp.Domain.Cursa;
+import com.example.alex.emptyapp.Domain.Motociclist;
+import com.example.alex.emptyapp.Domain.Participare;
 import com.example.alex.emptyapp.Domain.User;
 import com.example.alex.emptyapp.Repository.Local.AppDB;
-import com.example.alex.emptyapp.Repository.Local.DBStatics;
-import com.example.alex.emptyapp.Repository.Rest.RestClassRepository;
-import com.example.alex.emptyapp.Repository.Rest.RestClassScheduleRepository;
-import com.example.alex.emptyapp.Repository.Rest.RestFeedbackRepository;
+import com.example.alex.emptyapp.Repository.Rest.RestCursaRepository;
+import com.example.alex.emptyapp.Repository.Rest.RestMotociclistRepository;
 import com.example.alex.emptyapp.Repository.Rest.RestUserRepository;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 
 import retrofit2.Retrofit;
@@ -31,11 +24,11 @@ import retrofit2.Retrofit;
  * Created by Alex on 28.12.2017.
  */
 
-public class GymService
+public class CurseService
 {
     private final static String host = "http://192.168.0.101:63288/";
-    private DBGymService db_srv;
-    private RestGymService rest_srv;
+    private DBCurseService db_srv;
+    private RestCurseService rest_srv;
 
     public boolean isOnline()
     {
@@ -63,22 +56,21 @@ public class GymService
         }
     }
 
-    public GymService( Context context )
+    public CurseService( Context context )
     {
         AppDB db = Room.databaseBuilder( context,
                                          AppDB.class, "PC-Local-DB" ).allowMainThreadQueries().build();
-        db_srv = new DBGymService( db.classRepository(), db.classScheduleRepository(), db.userRepository(), db.feedbackRepository(), db.loggedInUser() );
+        db_srv = new DBCurseService( db.cursaRepository(), db.motociclistRepository(), db.userRepository(), db.loggedInUser(), db.participareRepository() );
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl( host + "api/" )
                 .build();
 
-        RestClassRepository restClassRepository = retrofit.create( RestClassRepository.class );
-        RestClassScheduleRepository restClassScheduleRepository = retrofit.create( RestClassScheduleRepository.class );
-        RestFeedbackRepository restFeedbackRepository = retrofit.create( RestFeedbackRepository.class );
+        RestCursaRepository restCursaRepository = retrofit.create( RestCursaRepository.class );
+        RestMotociclistRepository restMotociclistRepository = retrofit.create( RestMotociclistRepository.class );
         RestUserRepository restUserRepository = retrofit.create( RestUserRepository.class );
 
-        rest_srv = new RestGymService( restClassRepository, restClassScheduleRepository, restUserRepository, restFeedbackRepository );
+        rest_srv = new RestCurseService(restCursaRepository,restMotociclistRepository,restUserRepository );
 
     }
 
@@ -91,17 +83,21 @@ public class GymService
         try
         {
             db_srv.clear_all();
-            for( GymClass c : rest_srv.getClasses() )
-            {
-                db_srv.addClass( c );
-            }
-            for( ClassSchedule cs : rest_srv.getClassSchedules() )
-            {
-                db_srv.addClassSchedule( cs );
-            }
             for( User u : rest_srv.getUsers() )
             {
-                db_srv.registerUser( u );
+                db_srv.addUser( u );
+            }
+            for( Motociclist m : rest_srv.getMotociclisti() )
+            {
+                db_srv.addMotociclist( m );
+            }
+            for( Cursa c : rest_srv.getCurse() )
+            {
+                db_srv.addCursa( c );
+                for( Motociclist m : rest_srv.getParticipanti( c.getId() ) )
+                {
+                    db_srv.addParticipare( new Participare().setCursaId( c.getId() ).setMotociclistId( m.getId() ) );
+                }
             }
         }
         catch( Exception e )
@@ -116,7 +112,7 @@ public class GymService
         if( isOnline() )
         {
             u = rest_srv.registerUser( u );
-            return db_srv.registerUser( u );
+            return db_srv.addUser( u );
         }
         else
         {
@@ -144,12 +140,38 @@ public class GymService
         return db_srv.getLoggedUser();
     }
 
-    public GymClass addClass( GymClass c ) throws Exception
+    public List<Cursa> getCurse()
+    {
+        return db_srv.getCurse();
+    }
+
+    public List<Motociclist> getMotociclisti()
+    {
+        return db_srv.getMotociclisti();
+    }
+
+    public List< Participare > getParticipanti( int cursa_id )
+    {
+        return db_srv.getParticipanti( cursa_id );
+    }
+
+
+    public Cursa getCursa( int id )
+    {
+        return db_srv.getCursa( id );
+    }
+
+    public Motociclist getMotociclist( int id )
+    {
+        return db_srv.getMotociclist( id );
+    }
+
+    public Cursa addCursa( Cursa cursa ) throws Exception
     {
         if( isOnline() )
         {
-            c = rest_srv.addClass( c );
-            return db_srv.addClass( c );
+            cursa = rest_srv.addCursa( cursa );
+            return db_srv.addCursa( cursa );
         }
         else
         {
@@ -157,17 +179,12 @@ public class GymService
         }
     }
 
-    public List<ClassSchedule> getClassSchedule( int class_id )
-    {
-        return db_srv.getClassSchedule( class_id );
-    }
-
-    public ClassSchedule addClassSchedule( ClassSchedule cs ) throws Exception
+    public Motociclist addMotociclist( Motociclist m ) throws Exception
     {
         if( isOnline() )
         {
-            cs = rest_srv.addClassSchedule( cs );
-            return db_srv.addClassSchedule( cs );
+            m = rest_srv.addMotociclist( m );
+            return db_srv.addMotociclist( m );
         }
         else
         {
@@ -175,12 +192,12 @@ public class GymService
         }
     }
 
-    public void updateClassSchedule( ClassSchedule cs ) throws Exception
+    public Participare addParticipare( Participare p ) throws Exception
     {
         if( isOnline() )
         {
-            rest_srv.updateClassSchedule( cs );
-            db_srv.updateClassSchedule( cs );
+            p = rest_srv.addParticipare( p );
+            return db_srv.addParticipare( p );
         }
         else
         {
@@ -188,52 +205,13 @@ public class GymService
         }
     }
 
-    public Collection<GymClass> getClasses()
-    {
-        return db_srv.getClasses();
-    }
 
-    public Collection<User> getUsers()
-    {
-        return db_srv.getUsers();
-    }
-
-    public GymClass getClassById( int id )
-    {
-        return db_srv.getClassById( id );
-    }
-
-    public User getUserById( int id )
-    {
-        return db_srv.getUserById( id );
-    }
-
-    public ClassSchedule getClassScheduleById( int id )
-    {
-        return db_srv.getClassScheduleById( id );
-    }
-
-    public void updateClass( GymClass gymClass )
+    public void deleteCursa( Cursa el ) throws Exception
     {
         if( isOnline() )
         {
-            rest_srv.updateClass( gymClass );
-            db_srv.updateClass( gymClass );
-
-        }
-        else
-        {
-            throw new IllegalStateException( "Action not possible offline. " );
-        }
-
-    }
-
-    public void deleteClassSchedule( ClassSchedule cs )
-    {
-        if( isOnline() )
-        {
-            rest_srv.deleteClassSchedule( cs );
-            db_srv.deleteClassSchedule( cs );
+            rest_srv.deleteCursa( el );
+            db_srv.deleteCursa( el );
         }
         else
         {
@@ -241,18 +219,47 @@ public class GymService
         }
     }
 
-    public Feedback giveFeedback( Feedback feedback )
+    public void deleteMotociclist( Motociclist el ) throws Exception
     {
-        return db_srv.giveFeedback( feedback );
-    }
-
-    public List< Feedback > getFeedback( int trainer_id )
-    {
-        return db_srv.getFeedback( trainer_id );
+        if( isOnline() )
+        {
+            rest_srv.deleteMotociclist( el );
+            db_srv.deleteMotociclist( el );
+        }
+        else
+        {
+            throw new IllegalStateException( "Action not possible offline. " );
+        }
     }
 
     public void logout()
     {
         db_srv.logout();
+    }
+
+    public void updateCursa( Cursa cursa ) throws Exception
+    {
+        if( isOnline() )
+        {
+            rest_srv.updateCursa( cursa );
+            db_srv.updateCursa( cursa );
+        }
+        else
+        {
+            throw new IllegalStateException( "Action not possible offline. " );
+        }
+    }
+
+    public void updateMotociclist( Motociclist m ) throws Exception
+    {
+        if( isOnline() )
+        {
+            rest_srv.updateMotociclist( m );
+            db_srv.updateMotociclist( m );
+        }
+        else
+        {
+            throw new IllegalStateException( "Action not possible offline. " );
+        }
     }
 }

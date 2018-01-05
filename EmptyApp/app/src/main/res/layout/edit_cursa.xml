@@ -7,7 +7,7 @@
     <!-- TODO: Update blank fragment layout -->
 
     <TextView
-            android:text="Class name:"
+            android:text="Nume cursa:"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/textView3"
@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:inputType="textPersonName"
             android:ems="10"
-            android:id="@+id/txt_class_name"
+            android:id="@+id/txt_nume_cursa"
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginTop="8dp"
             android:layout_marginRight="8dp"
@@ -39,207 +39,150 @@
             android:layout_marginEnd="8dp"/>
 
     <TextView
-            android:text="Schedules"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:text="Participanti"
+            android:layout_width="79dp"
+            android:layout_height="16dp"
             android:id="@+id/textView4"
-            app:layout_constraintTop_toBottomOf="@+id/txt_class_name"
+            app:layout_constraintTop_toBottomOf="@+id/txt_cap_cursa"
             android:layout_marginLeft="16dp"
             app:layout_constraintLeft_toLeftOf="parent"
             android:textSize="14sp"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="32dp"/>
+            android:layout_marginTop="24dp"/>
 
     <Button
             android:text="Update"
             android:layout_width="100dp"
             android:layout_height="48dp"
-            android:id="@+id/btn_update_class_name"
-            app:layout_constraintTop_toBottomOf="@+id/txt_class_name"
+            android:id="@+id/btn_update_cursa"
+            app:layout_constraintTop_toBottomOf="@+id/txt_cap_cursa"
             android:layout_marginRight="8dp"
             app:layout_constraintRight_toRightOf="parent"
             android:layout_marginEnd="8dp"
-            android:layout_marginTop="4dp"/>
-
-    <EditText
-            android:id="@+id/txt_cs_date"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:ems="10"
-            android:inputType="datetime"
-            android:textSize="14sp"
-            app:layout_constraintLeft_toRightOf="@+id/textView9"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/list_class_schedule"
-            android:hint="YYYY-MM-DD HH:MM" />
+            android:layout_marginTop="0dp"/>
 
     <TextView
-            android:layout_width="75dp"
-            android:layout_height="20dp"
-            tools:text="Date:"
-            android:textAlignment="center"
-            android:layout_marginTop="16dp"
-            app:layout_constraintTop_toBottomOf="@+id/list_class_schedule"
-            android:layout_marginLeft="8dp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            android:id="@+id/textView9"
-            android:layout_marginStart="8dp" />
-
-    <Spinner
-        android:id="@+id/spinner_cs_difficulty"
-        android:layout_width="200dp"
-        android:layout_height="30dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="0dp"
-        app:layout_constraintHorizontal_bias="0.505"
-        app:layout_constraintLeft_toRightOf="@+id/textView7"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txt_cs_capacity" />
-
-    <TextView
-            android:text="Capacity:"
+            android:text="Nume:"
             android:layout_width="75dp"
             android:layout_height="20dp"
             android:id="@+id/textView6"
-            android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/txt_cs_date"
             android:layout_marginLeft="8dp"
             app:layout_constraintLeft_toLeftOf="parent"
             android:textAlignment="center"
-            android:layout_marginStart="8dp"/>
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintTop_toBottomOf="@+id/spinner_moto"/>
 
     <TextView
-            android:text="Difficulty:"
+            android:text="Cap. motor:"
             android:layout_width="75dp"
             android:layout_height="20dp"
             android:id="@+id/textView7"
-            android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/txt_cs_capacity"
+            android:layout_marginTop="16dp"
+            app:layout_constraintTop_toBottomOf="@+id/txt_nume_moto"
             android:layout_marginLeft="8dp"
             app:layout_constraintLeft_toLeftOf="parent"
             android:textAlignment="center"
             android:layout_marginStart="8dp"/>
 
     <TextView
-            android:text="Room:"
+            android:text="Echipa:"
             android:layout_width="75dp"
             android:layout_height="20dp"
-            android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/spinner_cs_difficulty"
             android:layout_marginLeft="8dp"
             app:layout_constraintLeft_toLeftOf="parent"
             android:id="@+id/textView10"
             android:textAlignment="center"
-            android:layout_marginStart="8dp"/>
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/txt_cap_moto"/>
 
     <EditText
-        android:id="@+id/txt_cs_capacity"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="0dp"
-        android:ems="10"
-        android:inputType="number"
-        android:textSize="14sp"
-        app:layout_constraintHorizontal_bias="0.505"
-        app:layout_constraintLeft_toRightOf="@+id/textView6"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txt_cs_date" />
-
-    <EditText
-            android:id="@+id/txt_cs_room"
+            android:id="@+id/txt_nume_moto"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
             android:layout_marginStart="8dp"
+            android:ems="10"
+            android:textSize="14sp"
+            app:layout_constraintHorizontal_bias="0.541"
+            app:layout_constraintLeft_toRightOf="@+id/textView6"
+            app:layout_constraintRight_toRightOf="parent"
             android:layout_marginTop="0dp"
+            app:layout_constraintTop_toBottomOf="@+id/spinner_moto"
+            android:inputType="text"/>
+
+    <EditText
+            android:id="@+id/txt_echipa_moto"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginStart="8dp"
             android:ems="10"
             android:inputType="textPersonName"
             android:textSize="14sp"
-            app:layout_constraintHorizontal_bias="0.505"
+            app:layout_constraintHorizontal_bias="0.541"
             app:layout_constraintLeft_toRightOf="@+id/textView10"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/spinner_cs_difficulty" />
+            android:layout_marginTop="7dp"
+            app:layout_constraintTop_toBottomOf="@+id/txt_cap_moto"/>
 
     <Button
-            android:text="Update"
+            android:text="Actualizare"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/btn_cs_update"
+            android:id="@+id/btn_moto_update"
             android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/spinner_cs_trainer"
+            app:layout_constraintTop_toBottomOf="@+id/txt_echipa_moto"
             android:layout_marginLeft="8dp"
             app:layout_constraintLeft_toLeftOf="parent"
             android:layout_marginRight="8dp"
             app:layout_constraintRight_toRightOf="parent"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"/>
-
-    <Button
-            android:text="Delete"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/btn_cs_delete"
-            android:layout_marginLeft="8dp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            android:layout_marginRight="8dp"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintHorizontal_bias="0.85"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
-            android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/spinner_cs_trainer"/>
+            app:layout_constraintHorizontal_bias="1.0"/>
 
     <Button
-            android:text="Add"
+            android:text="Adauga nou"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/btn_cs_add"
+            android:id="@+id/btn_moto_add"
             android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/spinner_cs_trainer"
+            app:layout_constraintTop_toBottomOf="@+id/txt_echipa_moto"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintHorizontal_bias="0.135"
+            app:layout_constraintHorizontal_bias="0.5"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"/>
 
     <TextView
-            android:text="Trainer:"
             android:layout_width="75dp"
             android:layout_height="20dp"
             android:id="@+id/textView"
             android:textAlignment="center"
-            android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/txt_cs_room"
+            android:layout_marginTop="16dp"
+            app:layout_constraintTop_toBottomOf="@+id/list_participanti"
             android:layout_marginLeft="8dp"
-            app:layout_constraintLeft_toLeftOf="parent"/>
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:text="Motociclist:"/>
 
     <Spinner
             android:layout_width="200dp"
             android:layout_height="30dp"
-            android:id="@+id/spinner_cs_trainer"
-            android:layout_marginTop="0dp"
-            app:layout_constraintTop_toBottomOf="@+id/txt_cs_room"
+            android:id="@+id/spinner_moto"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/list_participanti"
             android:layout_marginRight="8dp"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintLeft_toRightOf="@+id/textView"
             android:layout_marginLeft="8dp"
-        app:layout_constraintHorizontal_bias="0.505" />
+        app:layout_constraintHorizontal_bias="0.541" />
 
     <ListView
             android:layout_width="350dp"
@@ -252,6 +195,61 @@
             app:layout_constraintRight_toRightOf="parent"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
-            android:id="@+id/list_class_schedule"/>
+            android:id="@+id/list_participanti"/>
+
+    <TextView
+            android:text="Capacitate:"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView8"
+            android:textSize="18sp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/txt_nume_cursa"
+            android:layout_marginLeft="8dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_marginRight="8dp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintHorizontal_bias="0.1"/>
+
+    <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:ems="10"
+            android:id="@+id/txt_cap_cursa"
+            android:layout_marginTop="6dp"
+            app:layout_constraintTop_toBottomOf="@+id/txt_nume_cursa"
+            android:layout_marginRight="8dp"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginLeft="8dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintHorizontal_bias="0.9"/>
+
+    <EditText
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:ems="10"
+            android:id="@+id/txt_cap_moto"
+            android:layout_marginTop="0dp"
+            app:layout_constraintTop_toBottomOf="@+id/txt_nume_moto"
+            android:layout_marginRight="8dp"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginLeft="8dp"
+            app:layout_constraintLeft_toRightOf="@+id/textView7"
+            app:layout_constraintHorizontal_bias="0.54"/>
+
+    <Button
+            android:text="Participa"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/btn_participa"
+            android:layout_marginRight="8dp"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginLeft="8dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/txt_echipa_moto"
+            app:layout_constraintHorizontal_bias="0.0"/>
 
 </android.support.constraint.ConstraintLayout>

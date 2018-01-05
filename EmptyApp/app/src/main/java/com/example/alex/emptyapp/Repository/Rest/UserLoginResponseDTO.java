@@ -9,5 +9,4 @@ public class UserLoginResponseDTO
     public int Id;
     public String Username;
     public String Name;
-    public int Role;
 }

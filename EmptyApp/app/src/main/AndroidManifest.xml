@@ -16,9 +16,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".GUI.classes"></activity>
         <activity android:name=".GUI.Admin.AdminDashboard"></activity>
-        <activity android:name=".GUI.Admin.Edit_class_activity"></activity>
+        <activity android:name=".GUI.Admin.EditCurseActivity"></activity>
         <activity android:name=".GUI.User.UserDashboard"></activity>
         <activity android:name=".GUI.Trainer.TrainerDashboard"></activity>
     </application>

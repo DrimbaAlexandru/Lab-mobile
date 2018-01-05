@@ -2,7 +2,6 @@ package com.example.alex.emptyapp.GUI;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.arch.persistence.room.Room;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,20 +12,12 @@ import android.widget.ProgressBar;
 
 import com.example.alex.emptyapp.Domain.User;
 import com.example.alex.emptyapp.GUI.Admin.AdminDashboard;
-import com.example.alex.emptyapp.GUI.Trainer.TrainerDashboard;
-import com.example.alex.emptyapp.GUI.User.UserDashboard;
 import com.example.alex.emptyapp.R;
-import com.example.alex.emptyapp.Repository.Local.AppDB;
-import com.example.alex.emptyapp.Repository.Mock.MockClassRepository;
-import com.example.alex.emptyapp.Repository.Mock.MockClassScheduleRepository;
-import com.example.alex.emptyapp.Repository.Mock.MockFeedbackRepository;
-import com.example.alex.emptyapp.Repository.Mock.MockUserRepository;
-import com.example.alex.emptyapp.Service.DBGymService;
-import com.example.alex.emptyapp.Service.GymService;
+import com.example.alex.emptyapp.Service.CurseService;
 
 public class MainActivity extends Activity
 {
-    private GymService srv;// = new DBGymService( new MockClassRepository(), new MockClassScheduleRepository(), new MockUserRepository(), new MockFeedbackRepository() );
+    private CurseService srv;// = new DBCurseService( new MockCursaRepository(), new MockClassScheduleRepository(), new MockUserRepository(), new MockFeedbackRepository() );
 
     private EditText txt_username;
     private EditText txt_password;
@@ -69,32 +60,10 @@ public class MainActivity extends Activity
     private void start_app( User user )
     {
         started = true;
-        switch( user.getRole() )
-        {
-            case ADMIN:
-            {
-                Intent intent = new Intent( this, AdminDashboard.class );
-                intent.setFlags( Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_TASK_ON_HOME );
-                startActivity( intent );
-                break;
-            }
-            case USER:
-            {
-                Intent intent = new Intent( this, UserDashboard.class );
-                intent.setFlags( Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_TASK_ON_HOME );
-                startActivity( intent );
-                break;
-            }
-            case TRAINER:
-            {
-                Intent intent = new Intent( this, TrainerDashboard.class );
-                intent.setFlags( Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_TASK_ON_HOME );
-                startActivity( intent );
-                break;
-            }
-            default:
-                break;
-        }
+
+        Intent intent = new Intent( this, AdminDashboard.class );
+        intent.setFlags( Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_TASK_ON_HOME );
+        startActivity( intent );
     }
 
 
@@ -104,7 +73,7 @@ public class MainActivity extends Activity
         super.onCreate( savedInstanceState );
         setContentView( R.layout.activity_main );
 
-        srv = new GymService( getApplicationContext() );
+        srv = new CurseService( getApplicationContext() );
 
         Button btn_login = ( Button )findViewById( R.id.btn_login );
         txt_username = ( EditText )findViewById( R.id.txt_username );
