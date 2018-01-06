@@ -18,9 +18,9 @@ import retrofit2.http.Path;
 
 public interface RestMotociclistRepository
 {
-    final String basePath = "Motociclist/";
+    final String basePath = "Motociclist";
 
-    @GET( basePath + "{id}" )
+    @GET( basePath + "/{id}" )
     Call< Motociclist > getById( @Path( "id" ) int Id );
 
     @GET( basePath )
@@ -32,7 +32,7 @@ public interface RestMotociclistRepository
     @PUT( basePath )
     public Call< Void > update( @Body Motociclist elem );
 
-    @DELETE( basePath + "{id}" )
+    @DELETE( basePath + "/{id}" )
     public Call< Void > remove( @Path( "id" ) int Id );
 }
 

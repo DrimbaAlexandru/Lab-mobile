@@ -11,6 +11,8 @@ import com.example.noonecares.curses.Repository.Rest.UserDTO;
 import com.example.noonecares.curses.Repository.Rest.UserLoginResponseDTO;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import retrofit2.Call;
@@ -34,41 +36,28 @@ public class RestCurseService
         userRepo = uR;
     }
 
-    public User registerUser( User u ) throws Exception
-    {
-        Call< User > call = userRepo.add( u );
-        Response< User > resp = call.execute();
-        return resp.body();
-    }
-
-    public User login( String username, String password ) throws Exception
+    public int login( String username, String password ) throws Exception
     {
         Call< UserLoginResponseDTO > call = userRepo.login( new UserDTO( username, password ) );
         Response< UserLoginResponseDTO > resp = call.execute();
         try
         {
-            return getUserById( resp.body().Id );
+            return resp.body().Id;
         }
         catch( Exception e )
         {
-            return null;
+            return 0;
         }
     }
-
-    private User getUserById( int id ) throws IOException
-    {
-        return userRepo.getById( id ).execute().body();
-    }
-
 
     public Cursa addCursa( Cursa c ) throws IOException
     {
         return cursaRepo.add( c ).execute().body();
     }
 
-    public Participare addParticipare( Participare p ) throws IOException
+    public void addParticipare( Participare p ) throws IOException
     {
-        return cursaRepo.addParticipant( p.getCursaId(), p.getMotociclistId() ).execute().body();
+        cursaRepo.addParticipant( p.getCursaId(), p.getMotociclistId() ).execute();
     }
 
     public Motociclist addMotociclist( Motociclist m ) throws IOException
@@ -125,8 +114,14 @@ public class RestCurseService
         motociclistRepo.remove( m.getId() ).execute();
     }
 
-    public List<User> getUsers() throws IOException
+    public Collection<User> getUsers() throws IOException
     {
-        return userRepo.getAll().execute().body();
+        List< User > users = new ArrayList<>();
+
+        for( UserLoginResponseDTO u : userRepo.getAll().execute().body() )
+        {
+            users.add( u.toUser() );
+        }
+        return users;
     }
 }

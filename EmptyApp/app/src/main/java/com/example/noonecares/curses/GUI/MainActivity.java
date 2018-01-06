@@ -98,39 +98,4 @@ public class MainActivity extends Activity
         btn_login.setOnClickListener( view -> on_login() );
 
     }
-/*
-    @Override
-    protected void onResume()
-    {
-        super.onResume();
-        if( srv.getLoggedUser() != null )
-        {
-            if( !started )
-            {
-                start_app( srv.getLoggedUser() );
-            }
-            else
-            {
-                this.finish();
-            }
-        }
-    }
-    */
 }
-
-/*      TODOs:
-*  _______________________________________________________________________________Priority_____|__Status__
-* | - Login user and redirect to corresponding dashboard                     | +H  |     |     | 100
-* | - Edit account ( animation when displaying this ):                       |     | +M  |     | 50
-* | - Register user:                                                         |     |     |  L  | 0
-* | - Admin dashboard: - set user as regular user / trainer                  |     | +M  |     | 66
-* |                    - manage classes and class schedules                  | +H  |     |     | 100
-* |                    - manage subscription types                           |     |  M  |     | 0
-* | - Trainer dashboard: - Manage personal schedules                         |     |     |  L  | 0
-* |                      - see feedback chart                                |     | +M  |     | 100
-* | - Client dashboard: - See class schedules, enroll/unenroll from schedule | +H  |     |     | 50
-* |                     - see personal schedule                              |     |     |  L  | 0
-* |                     - give rating to trainer                             |     | +M  |     | 100
-* |                     - manage its subscriptions                           |     |  M  |     | 0
-* |                     - send email to trainer                              |     |     |  L  | 0
-*/

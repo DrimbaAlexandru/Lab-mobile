@@ -69,7 +69,7 @@ public class EditCurseActivity extends Activity
             {
                 ( ( EditText )findViewById( R.id.txt_nume_moto ) ).setText( motociclist.getNume() );
                 ( ( EditText )findViewById( R.id.txt_echipa_moto ) ).setText( motociclist.getEchipa() );
-                ( ( EditText )findViewById( R.id.txt_cap_moto ) ).setText( motociclist.getCapacitate_motor() );
+                ( ( EditText )findViewById( R.id.txt_cap_moto ) ).setText( "" + motociclist.getCapacitate_motor() );
                 editing_moto = motociclist;
             }
             else
@@ -102,7 +102,7 @@ public class EditCurseActivity extends Activity
         if( cursa != null )
         {
             ( ( EditText )findViewById( R.id.txt_nume_cursa ) ).setText( cursa.getNume() );
-            ( ( EditText )findViewById( R.id.txt_cap_cursa ) ).setText( cursa.getCapacitate() );
+            ( ( EditText )findViewById( R.id.txt_cap_cursa ) ).setText( "" + cursa.getCapacitate() );
             ( ( Button )findViewById( R.id.btn_update_cursa ) ).setText( "Update" );
         }
         else
@@ -157,10 +157,21 @@ public class EditCurseActivity extends Activity
         participanti_adapter = new ArrayAdapter< String >( EditCurseActivity.this, android.R.layout.simple_list_item_1, participanti_list );
 
         list_participanti.setAdapter( participanti_adapter );
-        list_participanti.setOnItemClickListener( ( AdapterView< ? > adapterView, View view, int i, long l ) ->
-                                                  {
-                                                      populate_moto_details( srv.getMotociclist( motociclisti_ids.get( i ) ) );
-                                                  } );
+
+        ( ( Spinner )findViewById( R.id.spinner_moto ) ).setOnItemSelectedListener( new AdapterView.OnItemSelectedListener()
+        {
+            @Override
+            public void onItemSelected( AdapterView< ? > adapterView, View view, int i, long l )
+            {
+                populate_moto_details( srv.getMotociclist( motociclisti_ids.get( i ) ) );
+            }
+
+            @Override
+            public void onNothingSelected( AdapterView< ? > adapterView )
+            {
+                populate_moto_details( null );
+            }
+        } );
 
         ( ( Button )findViewById( R.id.btn_update_cursa ) ).setOnClickListener( e->{
             onAddUpdateCursa();

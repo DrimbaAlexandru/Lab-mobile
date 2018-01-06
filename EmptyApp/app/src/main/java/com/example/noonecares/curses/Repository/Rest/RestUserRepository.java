@@ -17,20 +17,14 @@ import retrofit2.http.Path;
 
 public interface RestUserRepository
 {
-    final String basePath = "";
-
-    @GET( basePath + "{id}" )
-    Call< User > getById( @Path( "id" ) int Id );
+    final String basePath = "users";
 
     @GET( basePath )
-    Call< List< User > > getAll();
-
-    @POST( basePath )
-    Call< User > add( @Body User elem );
+    Call< List< UserLoginResponseDTO > > getAll();
 
     @PUT( basePath )
     public void update( @Body User elem );
 
-    @POST( basePath )
+    @POST( basePath + "/login" )
     Call< UserLoginResponseDTO > login( @Body UserDTO elem );
 }

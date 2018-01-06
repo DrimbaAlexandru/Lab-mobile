@@ -20,9 +20,9 @@ import retrofit2.http.Path;
 
 public interface RestCursaRepository
 {
-    final String basePath = "Cursa/";
+    final String basePath = "Cursa";
 
-    @GET( basePath + "{id}" )
+    @GET( basePath + "/{id}" )
     Call< Cursa > getById( @Path( "id" ) int Id );
 
     @GET( basePath )
@@ -34,14 +34,14 @@ public interface RestCursaRepository
     @PUT( basePath )
     public Call< Void > update( @Body Cursa elem );
 
-    @DELETE( basePath + "{id}" )
+    @DELETE( basePath + "/{id}" )
     public Call< Void > remove( @Path( "id" ) int Id );
 
-    @GET( basePath + "{id}/Participants" )
+    @GET( basePath + "/{id}/Participants" )
     Call< List< Motociclist > > getParticipanti( @Path( "id" ) int Id );
 
-    @POST( basePath + "{id_c}/Participants/{id_m}" )
-    Call< Participare > addParticipant( @Path( "id_c" ) int IdCursa, @Path( "id_m" ) int IdMotociclist );
+    @POST( basePath + "/{id_c}/Participants/{id_m}" )
+    Call< Void > addParticipant( @Path( "id_c" ) int IdCursa, @Path( "id_m" ) int IdMotociclist );
 
 }
 

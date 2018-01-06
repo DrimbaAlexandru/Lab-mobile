@@ -19,6 +19,7 @@ import com.example.noonecares.curses.Domain.Cursa;
 import com.example.noonecares.curses.Domain.Motociclist;
 import com.example.noonecares.curses.R;
 import com.example.noonecares.curses.Repository.Local.AppDB;
+import com.example.noonecares.curses.Service.CurseService;
 import com.example.noonecares.curses.Service.DBCurseService;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.ValueDependentColor;
@@ -35,9 +36,9 @@ import java.util.Map;
  */
 
 public class AdminDashboard extends Activity {
-    private DBCurseService srv;
+    private CurseService srv;
     private List< View > tabs = new ArrayList<>();
-
+    GraphView graph;
     ArrayAdapter< String > curse_adapter;
 
     ArrayList< String > curse_list = new ArrayList<>();
@@ -151,13 +152,13 @@ public class AdminDashboard extends Activity {
 
         final ListView curse = ( ListView )findViewById( R.id.list_curse );
 
-        AppDB db = Room.databaseBuilder( getApplicationContext(),
-                                         AppDB.class, "LocalDB" ).allowMainThreadQueries().build();
-        srv = new DBCurseService( db.cursaRepository(), db.motociclistRepository(), db.userRepository(), db.loggedInUser(), db.participareRepository() );
-        
+        srv = new CurseService( getApplicationContext() );
+
         tabs = new ArrayList<>();
         tabs.add( findViewById( R.id.list_curse ) );
         tabs.add( findViewById( R.id.statistics_graph ) );
+
+        graph = ( GraphView )findViewById( R.id.statistics_graph );
 
         curse_adapter = new ArrayAdapter< String >( AdminDashboard.this, android.R.layout.simple_list_item_1, curse_list );
 
@@ -171,8 +172,6 @@ public class AdminDashboard extends Activity {
                                                 intent.putExtra( "cursaId", curse_ids.get( i ) );
                                                 intent.setFlags( Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_TASK_ON_HOME );
                                                 startActivity( intent );
-
-                                                populate();
                                             }
                                             catch( Exception e )
                                             {
@@ -225,14 +224,16 @@ public class AdminDashboard extends Activity {
                 capacities.put( m.getCapacitate_motor(), capacities.get( m.getCapacitate_motor() ) + 1 );
             }
         }
-        List< DataPoint > dps = new ArrayList<>();
+        DataPoint[] dps = new DataPoint[capacities.keySet().size()];
+        int i=0;
         for( Map.Entry< Integer, Integer > e : capacities.entrySet() )
         {
-            dps.add( new DataPoint( e.getKey(), e.getValue() ) );
+            dps[ i ] = new DataPoint( e.getKey(), e.getValue() );
+            i++;
         }
 
-        GraphView graph = ( GraphView )findViewById( R.id.statistics_graph );
-        BarGraphSeries< DataPoint > series = new BarGraphSeries<>( ( DataPoint[] )dps.toArray() );
+        BarGraphSeries< DataPoint > series = new BarGraphSeries< DataPoint >( dps );
+        graph.removeAllSeries();
         graph.addSeries( series );
 
         graph.getViewport().setYAxisBoundsManual( true );
@@ -240,21 +241,8 @@ public class AdminDashboard extends Activity {
 
         graph.getViewport().setXAxisBoundsManual( true );
         graph.getViewport().setMinX( 0 );
-        graph.getViewport().setMaxX( 6 );
 
-        // styling
-        series.setValueDependentColor( new ValueDependentColor< DataPoint >()
-        {
-            @Override
-            public int get( DataPoint data )
-            {
-                return Color.rgb( ( int )( Math.min( 1.0, ( -( data.getX() - 3 ) / 2 + 1 ) ) * 230 ),
-                                  ( int )( Math.min( 1.0, ( ( data.getX() - 3 ) / 2 + 1 ) ) * 230 ),
-                                  0 );
-            }
-        } );
-
-        series.setSpacing( 50 );
+        series.setSpacing( 30 );
 
         // draw values on top
         series.setDrawValuesOnTop( true );

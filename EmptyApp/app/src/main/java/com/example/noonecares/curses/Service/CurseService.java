@@ -2,6 +2,7 @@ package com.example.noonecares.curses.Service;
 
 import android.arch.persistence.room.Room;
 import android.content.Context;
+import android.os.StrictMode;
 
 import com.example.noonecares.curses.Domain.Cursa;
 import com.example.noonecares.curses.Domain.Motociclist;
@@ -18,6 +19,7 @@ import java.net.URL;
 import java.util.List;
 
 import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by Alex on 28.12.2017.
@@ -25,7 +27,7 @@ import retrofit2.Retrofit;
 
 public class CurseService
 {
-    private final static String host = "http://192.168.0.101:63288/";
+    private final static String host = "http://192.168.0.100:63288/";
     private DBCurseService db_srv;
     private RestCurseService rest_srv;
 
@@ -63,11 +65,16 @@ public class CurseService
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl( host + "api/" )
+                .addConverterFactory( GsonConverterFactory.create() )
                 .build();
 
         RestCursaRepository restCursaRepository = retrofit.create( RestCursaRepository.class );
         RestMotociclistRepository restMotociclistRepository = retrofit.create( RestMotociclistRepository.class );
         RestUserRepository restUserRepository = retrofit.create( RestUserRepository.class );
+
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+
+        StrictMode.setThreadPolicy(policy);
 
         rest_srv = new RestCurseService(restCursaRepository,restMotociclistRepository,restUserRepository );
 
@@ -109,26 +116,20 @@ public class CurseService
 
     }
 
-    public User registerUser( User u ) throws Exception
-    {
-        if( isOnline() )
-        {
-            u = rest_srv.registerUser( u );
-            return db_srv.addUser( u );
-        }
-        else
-        {
-            throw new IllegalStateException( "Action not possible offline. " );
-        }
-    }
-
     public User login( String username, String password ) throws Exception
     {
         if( isOnline() )
         {
-            User u = rest_srv.login( username, password );
-            db_srv.login( u.getId() );
-            return u;
+            int id = rest_srv.login( username, password );
+            if( id != 0 )
+            {
+                return db_srv.login( id );
+            }
+            else
+            {
+                throw new IllegalArgumentException( "User or password is incorrect" );
+            }
+
         }
         else
         {
@@ -198,7 +199,7 @@ public class CurseService
     {
         if( isOnline() )
         {
-            p = rest_srv.addParticipare( p );
+            rest_srv.addParticipare( p );
             return db_srv.addParticipare( p );
         }
         else
