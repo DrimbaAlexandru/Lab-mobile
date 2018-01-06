@@ -30,11 +30,11 @@ public interface RestClassScheduleRepository
     Call< List< ClassSchedule > > getAll();
 
     @POST( basePath )
-    Call< ClassSchedule > add( @Body ClassSchedule elem );
+    Call< ClassSchedule > add( @Body ClassScheduleDTO elem );
 
-    @PUT( basePath )
-    public void update( @Body ClassSchedule elem );
+    @PUT( basePath + "{id}" )
+    public Call< Void > update( @Body ClassScheduleDTO elem, @Path( "id" ) int Id );
 
     @DELETE( basePath + "{id}" )
-    public void remove( @Path( "id" ) int Id );
+    public Call<Void> remove( @Path( "id" ) int Id );
 }

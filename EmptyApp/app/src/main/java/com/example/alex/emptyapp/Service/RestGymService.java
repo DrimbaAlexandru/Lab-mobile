@@ -5,6 +5,7 @@ import com.example.alex.emptyapp.Domain.Feedback;
 import com.example.alex.emptyapp.Domain.GymClass;
 import com.example.alex.emptyapp.Domain.Role;
 import com.example.alex.emptyapp.Domain.User;
+import com.example.alex.emptyapp.Repository.Rest.ClassScheduleDTO;
 import com.example.alex.emptyapp.Repository.Rest.RestClassRepository;
 import com.example.alex.emptyapp.Repository.Rest.RestClassScheduleRepository;
 import com.example.alex.emptyapp.Repository.Rest.RestFeedbackRepository;
@@ -39,24 +40,17 @@ public class RestGymService
         feedbackRepo = fR;
     }
 
-    public User registerUser( User u ) throws Exception
-    {
-        Call< User > call = userRepo.add( u );
-        Response< User > resp = call.execute();
-        return resp.body();
-    }
-
-    public User login( String username, String password ) throws Exception
+    public int login( String username, String password ) throws Exception
     {
         Call< UserLoginResponseDTO > call = userRepo.login( new UserDTO( username, password ) );
         Response< UserLoginResponseDTO > resp = call.execute();
         try
         {
-            return getUserById( resp.body().Id );
+            return resp.body().Id;
         }
         catch( Exception e )
         {
-            return null;
+            return 0;
         }
     }
 
@@ -75,12 +69,12 @@ public class RestGymService
 
     public ClassSchedule addClassSchedule( ClassSchedule cs ) throws IOException
     {
-        return classScheduleRepo.add( cs ).execute().body();
+        return classScheduleRepo.add( ClassScheduleDTO.fromClassSchedule( cs ) ).execute().body();
     }
 
-    public void updateClassSchedule( ClassSchedule cs ) throws IllegalArgumentException
+    public void updateClassSchedule( ClassSchedule cs ) throws Exception
     {
-        classScheduleRepo.update( cs );
+        classScheduleRepo.update( ClassScheduleDTO.fromClassSchedule( cs ), cs.getId() ).execute();
     }
 
     public Collection<GymClass> getClasses() throws IOException
@@ -90,7 +84,13 @@ public class RestGymService
 
     public Collection<User> getUsers() throws IOException
     {
-        return userRepo.getAll().execute().body();
+        List< User > users = new ArrayList<>();
+
+        for( UserLoginResponseDTO u : userRepo.getAll().execute().body() )
+        {
+            users.add( u.toUser() );
+        }
+        return users;
     }
 
     public GymClass getClassById( int id ) throws IOException
@@ -98,24 +98,19 @@ public class RestGymService
         return classRepo.getById( id ).execute().body();
     }
 
-    public User getUserById( int id ) throws IOException
+    public void updateClass( GymClass gymClass ) throws IOException
     {
-        return userRepo.getById( id ).execute().body();
+        classRepo.update( gymClass, gymClass.getId() ).execute();
     }
 
-    public void updateClass( GymClass gymClass )
+    public void deleteClassSchedule( ClassSchedule cs ) throws Exception
     {
-        classRepo.update( gymClass );
-    }
-
-    public void deleteClassSchedule( ClassSchedule cs )
-    {
-        classScheduleRepo.remove( cs.getId() );
+        classScheduleRepo.remove( cs.getId() ).execute();
     }
 
     public Feedback giveFeedback( Feedback feedback ) throws IOException
     {
-        return feedbackRepo.add( feedback ).execute().body();
+        return feedbackRepo.give( feedback ).execute().body();
     }
 
     public List< Feedback > getFeedback( ) throws IOException

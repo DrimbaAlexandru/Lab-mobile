@@ -2,6 +2,7 @@ package com.example.alex.emptyapp.Service;
 
 import android.arch.persistence.room.Room;
 import android.content.Context;
+import android.os.StrictMode;
 
 import com.example.alex.emptyapp.Domain.ClassSchedule;
 import com.example.alex.emptyapp.Domain.Difficulty;
@@ -15,6 +16,8 @@ import com.example.alex.emptyapp.Repository.Rest.RestClassRepository;
 import com.example.alex.emptyapp.Repository.Rest.RestClassScheduleRepository;
 import com.example.alex.emptyapp.Repository.Rest.RestFeedbackRepository;
 import com.example.alex.emptyapp.Repository.Rest.RestUserRepository;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -26,6 +29,7 @@ import java.util.Date;
 import java.util.List;
 
 import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by Alex on 28.12.2017.
@@ -33,7 +37,7 @@ import retrofit2.Retrofit;
 
 public class GymService
 {
-    private final static String host = "http://192.168.0.101:63288/";
+    private final static String host = "http://192.168.0.101:63288";
     private DBGymService db_srv;
     private RestGymService rest_srv;
 
@@ -57,7 +61,7 @@ public class GymService
                 return false;
             }
         }
-        catch( IOException e )
+        catch( Exception e )
         {
             return false;
         }
@@ -70,7 +74,8 @@ public class GymService
         db_srv = new DBGymService( db.classRepository(), db.classScheduleRepository(), db.userRepository(), db.feedbackRepository(), db.loggedInUser() );
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl( host + "api/" )
+                .baseUrl( host + "/api/" )
+                .addConverterFactory( GsonConverterFactory.create( new GsonBuilder().setDateFormat( "yyyy-MM-dd HH:mm:ss" ).create() ) )
                 .build();
 
         RestClassRepository restClassRepository = retrofit.create( RestClassRepository.class );
@@ -79,6 +84,10 @@ public class GymService
         RestUserRepository restUserRepository = retrofit.create( RestUserRepository.class );
 
         rest_srv = new RestGymService( restClassRepository, restClassScheduleRepository, restUserRepository, restFeedbackRepository );
+
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+
+        StrictMode.setThreadPolicy(policy);
 
     }
 
@@ -95,14 +104,15 @@ public class GymService
             {
                 db_srv.addClass( c );
             }
-            for( ClassSchedule cs : rest_srv.getClassSchedules() )
-            {
-                db_srv.addClassSchedule( cs );
-            }
             for( User u : rest_srv.getUsers() )
             {
                 db_srv.registerUser( u );
             }
+            for( ClassSchedule cs : rest_srv.getClassSchedules() )
+            {
+                db_srv.addClassSchedule( cs );
+            }
+
         }
         catch( Exception e )
         {
@@ -111,26 +121,20 @@ public class GymService
 
     }
 
-    public User registerUser( User u ) throws Exception
-    {
-        if( isOnline() )
-        {
-            u = rest_srv.registerUser( u );
-            return db_srv.registerUser( u );
-        }
-        else
-        {
-            throw new IllegalStateException( "Action not possible offline. " );
-        }
-    }
-
     public User login( String username, String password ) throws Exception
     {
         if( isOnline() )
         {
-            User u = rest_srv.login( username, password );
-            db_srv.login( u.getId() );
-            return u;
+            int id = rest_srv.login( username, password );
+            if( id != 0 )
+            {
+                return db_srv.login( id );
+            }
+            else
+            {
+                throw new IllegalArgumentException( "User or password is incorrect" );
+            }
+
         }
         else
         {
@@ -148,6 +152,7 @@ public class GymService
     {
         if( isOnline() )
         {
+            c.setId( 0 );
             c = rest_srv.addClass( c );
             return db_srv.addClass( c );
         }
@@ -166,6 +171,7 @@ public class GymService
     {
         if( isOnline() )
         {
+            cs.setId( 0 );
             cs = rest_srv.addClassSchedule( cs );
             return db_srv.addClassSchedule( cs );
         }
@@ -213,7 +219,7 @@ public class GymService
         return db_srv.getClassScheduleById( id );
     }
 
-    public void updateClass( GymClass gymClass )
+    public void updateClass( GymClass gymClass ) throws IOException
     {
         if( isOnline() )
         {
@@ -228,7 +234,7 @@ public class GymService
 
     }
 
-    public void deleteClassSchedule( ClassSchedule cs )
+    public void deleteClassSchedule( ClassSchedule cs ) throws Exception
     {
         if( isOnline() )
         {
@@ -241,9 +247,17 @@ public class GymService
         }
     }
 
-    public Feedback giveFeedback( Feedback feedback )
+    public Feedback giveFeedback( Feedback feedback ) throws Exception
     {
-        return db_srv.giveFeedback( feedback );
+        if( isOnline() )
+        {
+            feedback = rest_srv.giveFeedback( feedback );
+            return db_srv.giveFeedback( feedback );
+        }
+        else
+        {
+            throw new IllegalStateException( "Action not possible offline. " );
+        }
     }
 
     public List< Feedback > getFeedback( int trainer_id )

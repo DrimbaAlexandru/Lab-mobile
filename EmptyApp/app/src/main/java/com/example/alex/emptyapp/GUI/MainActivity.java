@@ -26,7 +26,7 @@ import com.example.alex.emptyapp.Service.GymService;
 
 public class MainActivity extends Activity
 {
-    private GymService srv;// = new DBGymService( new MockClassRepository(), new MockClassScheduleRepository(), new MockUserRepository(), new MockFeedbackRepository() );
+    private GymService srv;
 
     private EditText txt_username;
     private EditText txt_password;
@@ -154,7 +154,7 @@ public class MainActivity extends Activity
 * | - Login user and redirect to corresponding dashboard                     | +H  |     |     | 100
 * | - Edit account ( animation when displaying this ):                       |     | +M  |     | 50
 * | - Register user:                                                         |     |     |  L  | 0
-* | - Admin dashboard: - set user as regular user / trainer                  |     | +M  |     | 66
+* | - Admin dashboard: - set user as regular user / trainer                  |     | +M  |     | 50
 * |                    - manage classes and class schedules                  | +H  |     |     | 100
 * |                    - manage subscription types                           |     |  M  |     | 0
 * | - Trainer dashboard: - Manage personal schedules                         |     |     |  L  | 0
@@ -164,4 +164,5 @@ public class MainActivity extends Activity
 * |                     - give rating to trainer                             |     | +M  |     | 100
 * |                     - manage its subscriptions                           |     |  M  |     | 0
 * |                     - send email to trainer                              |     |     |  L  | 0
+* |
 */

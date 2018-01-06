@@ -19,22 +19,22 @@ import retrofit2.http.Path;
 
 public interface RestClassRepository
 {
-    final String basePath = "Class/";
+    final String basePath = "Class";
 
-    @GET( basePath + "{id}" )
+    @GET( basePath + "/{id}" )
     Call< GymClass > getById( @Path( "id" ) int Id );
 
-    @GET( "classes/" )
+    @GET( "classes" )
     Call< List< GymClass > > getAll();
 
     @POST( basePath )
     Call< GymClass > add( @Body GymClass elem );
 
-    @PUT( basePath )
-    public void update( @Body GymClass elem );
+    @PUT( basePath + "{id}" )
+    public Call< Void > update( @Body GymClass elem, @Path( "id" ) int Id );
 
-    @DELETE( basePath + "{id}" )
-    public void remove( @Path( "id" ) int Id );
+    @DELETE( basePath + "/{id}" )
+    public Call<Void> remove( @Path( "id" ) int Id );
 
 }
 

@@ -22,20 +22,15 @@ import retrofit2.http.Path;
 public interface RestFeedbackRepository
 {
 
-    final String basePath = "";
+    final String basePath = "feedback";
 
-    @GET( basePath + "{id}" )
-    Call< Feedback > getById( @Path( "id" ) int Id );
+    @GET( basePath + "/{id}" )
+    Call< List< Feedback > > getByTrainerId( @Path( "id" ) int Id );
 
     @GET( basePath )
     Call< List< Feedback > > getAll();
 
     @POST( basePath )
-    Call< Feedback > add( @Body Feedback elem );
+    Call< Feedback > give( @Body Feedback elem );
 
-    @PUT( basePath )
-    public void update( @Body Feedback elem );
-
-    @DELETE( basePath + "{id}" )
-    public void remove( @Path( "id" ) int Id );
 }
