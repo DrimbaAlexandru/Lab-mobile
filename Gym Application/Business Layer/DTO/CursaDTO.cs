@@ -13,6 +13,7 @@ namespace Business_Layer.DTO
         public int Id { get; set; }
         public int capacitate { set; get; }
         public int loc_ramas { set; get; }
+        public string nume { set; get; }
 
         public CursaDTO()
         {
@@ -23,6 +24,7 @@ namespace Business_Layer.DTO
             Id = c.Id;
             capacitate = c.capacitate;
             loc_ramas = capacitate - c.Participanti.Count;
+            nume = c.nume;
         }
     }
 }

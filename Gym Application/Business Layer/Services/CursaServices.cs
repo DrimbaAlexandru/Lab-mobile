@@ -116,5 +116,27 @@ namespace Business_Layer.Services
                 }
             }
         }
+
+        public CursaDTO updateCursa( Cursa cursa )
+        {
+            using( var uow = new UnitOfWork() )
+            {
+                var repo = uow.Repository<Cursa>();
+                Cursa found = repo.GetById( cursa.Id );
+                if( found == null )
+                {
+                    uow.Repository<Cursa>().Save( cursa );
+                    uow.Save();
+                }
+                else
+                {
+                    found.capacitate = cursa.capacitate;
+                    found.nume = cursa.nume;
+                    uow.Repository<Cursa>().Update( found );
+                    uow.Save();
+                }
+                return new CursaDTO( cursa );
+            }
+        }
     }
 }

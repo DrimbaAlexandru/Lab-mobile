@@ -29,6 +29,21 @@ namespace Gym_Application.Controllers
             return Ok( model );
         }
 
+        [Route( "api/Motociclist" )]
+        [EnableCors( origins: "*", headers: "*", methods: "*" )]
+        [HttpPut]
+        public IHttpActionResult PutMotociclist( [FromBody]Motociclist motociclist )
+        {
+            if( !ModelState.IsValid )
+            {
+                return BadRequest( ModelState );
+            }
+
+            var service = new MotociclistServices();
+            MotociclistDTO model = service.updateMotociclist( motociclist );
+            return Ok( model );
+        }
+
         [Route( "api/Motociclist/{id}" )]
         [EnableCors( origins: "*", headers: "*", methods: "*" )]
         [HttpDelete]

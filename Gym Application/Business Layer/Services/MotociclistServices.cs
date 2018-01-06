@@ -71,5 +71,28 @@ namespace Business_Layer.Services
                 }
             }
         }
+
+        public MotociclistDTO updateMotociclist( Motociclist m )
+        {
+            using( var uow = new UnitOfWork() )
+            {
+                var repo = uow.Repository<Motociclist>();
+                Motociclist found = repo.GetById( m.Id );
+                if( found == null )
+                {
+                    repo.Save( m );
+                    uow.Save();
+                }
+                else
+                {
+                    found.capacitate_motor = m.capacitate_motor;
+                    found.nume = m.nume;
+                    found.echipa = m.echipa;
+                    repo.Update( found );
+                    uow.Save();
+                }
+                return new MotociclistDTO( m );
+            }
+        }
     }
 }

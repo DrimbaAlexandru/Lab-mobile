@@ -29,6 +29,21 @@ namespace Gym_Application.Controllers
             return Ok( model );
         }
 
+        [Route( "api/Cursa" )]
+        [EnableCors( origins: "*", headers: "*", methods: "*" )]
+        [HttpPut]
+        public IHttpActionResult PutCursa( [FromBody]Cursa cursa )
+        {
+            if( !ModelState.IsValid )
+            {
+                return BadRequest( ModelState );
+            }
+
+            var service = new CursaServices();
+            CursaDTO model = service.updateCursa( cursa );
+            return Ok( model );
+        }
+
         [Route( "api/Cursa/{id}" )]
         [EnableCors( origins: "*", headers: "*", methods: "*" )]
         [HttpDelete]
