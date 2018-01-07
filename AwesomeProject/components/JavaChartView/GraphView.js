@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import {requireNativeComponent, ViewPropTypes, View } from 'react-native';
-import Native_bridge_test from './javaModuleWrapper';
+//import Native_bridge_test from './javaModuleWrapper';
 
 var iface = {
   name: 'GraphView',
