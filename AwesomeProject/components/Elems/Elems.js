@@ -24,7 +24,7 @@ export default class Elems extends Component {
   
   populateData()
   {
-	  Native_bridge_test.getClasses( 
+	  Native_bridge_test.getCurse( 
 		( response ) =>
 		{
 			var myObject = JSON.parse( response );

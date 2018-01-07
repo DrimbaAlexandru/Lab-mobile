@@ -6,8 +6,8 @@ import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
 
-import com.awesomeproject.Domain.GymClass;
-import com.awesomeproject.Repository.Interfaces.IClassRepository;
+import com.awesomeproject.Domain.Cursa;
+import com.awesomeproject.Repository.Interfaces.ICursaRepository;
 
 import java.util.List;
 
@@ -16,25 +16,25 @@ import java.util.List;
  */
 
 @Dao
-public interface DBClassRepository extends IClassRepository
+public interface DBCursaRepository extends ICursaRepository
 {
     @Override
-    @Query( "SELECT * FROM GymClass WHERE Id == :Id" )
-    GymClass getById( int Id );
+    @Query( "SELECT * FROM Cursa WHERE Id == :Id" )
+    Cursa getById( int Id );
 
     @Override
-    @Query( "SELECT * FROM GymClass" )
-    List<GymClass> getAll();
+    @Query( "SELECT * FROM Cursa" )
+    List<Cursa> getAll();
 
     @Override
     @Insert
-    void add( GymClass elem );
+    void add( Cursa elem );
 
     @Override
     @Update
-    void update( GymClass elem );
+    void update( Cursa elem );
 
     @Override
     @Delete
-    void remove( GymClass elem );
+    void remove( Cursa elem );
 }

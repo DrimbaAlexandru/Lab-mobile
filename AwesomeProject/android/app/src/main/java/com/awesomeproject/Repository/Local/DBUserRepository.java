@@ -19,11 +19,11 @@ import java.util.List;
 public interface DBUserRepository extends IUserRepository
 {
     @Override
-    @Query( "SELECT * FROM GymUser WHERE Id == :Id" )
+    @Query( "SELECT * FROM AppUser WHERE Id == :Id" )
     User getById( int Id );
 
     @Override
-    @Query( "SELECT * FROM GymUser" )
+    @Query( "SELECT * FROM AppUser" )
     List< User > getAll();
 
     @Override

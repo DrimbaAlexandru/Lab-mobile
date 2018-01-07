@@ -1,19 +1,7 @@
 package com.awesomeproject.Native_Adapter;
 
-import com.awesomeproject.Domain.ClassSchedule;
-import com.facebook.react.bridge.ReadableArray;
-import com.facebook.react.bridge.ReadableMap;
-import com.facebook.react.bridge.WritableArray;
-import com.facebook.react.bridge.WritableMap;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Type;
-import java.util.HashMap;
-import java.util.IllegalFormatConversionException;
 
 /**
  * Created by Alex on 03.01.2018.

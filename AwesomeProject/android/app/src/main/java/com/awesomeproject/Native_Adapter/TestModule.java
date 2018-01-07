@@ -1,30 +1,25 @@
 package com.awesomeproject.Native_Adapter;
 
-import android.widget.Toast;
-
-import com.awesomeproject.Domain.ClassSchedule;
-import com.awesomeproject.Domain.Feedback;
-import com.awesomeproject.Domain.GymClass;
-import com.awesomeproject.Service.GymService;
+import com.awesomeproject.Domain.Cursa;
+import com.awesomeproject.Domain.Motociclist;
+import com.awesomeproject.Domain.Participare;
+import com.awesomeproject.Service.CurseService;
 import com.facebook.react.bridge.Callback;
-import com.facebook.react.bridge.NativeModule;
 import com.facebook.react.bridge.ReactApplicationContext;
-import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.uimanager.IllegalViewOperationException;
 
-import java.util.Map;
-import java.util.HashMap;
+import java.util.List;
 
 public class TestModule extends ReactContextBaseJavaModule
 {
-    private GymService gymService;
+    private CurseService curseService;
 
     public TestModule( ReactApplicationContext reactContext )
     {
         super( reactContext );
-        gymService = new GymService( reactContext );
+        curseService = new CurseService( reactContext );
     }
 
     @Override
@@ -32,27 +27,13 @@ public class TestModule extends ReactContextBaseJavaModule
     {
         return "Native_bridge_test";
     }
-
-    @ReactMethod
-    public void setString( Callback successCallback, Callback errorCallback )
-    {
-        String value = "Java says: the ting goes skrra, pap pap ka ka ka";
-        try
-        {
-            successCallback.invoke( value );
-        }
-        catch( IllegalViewOperationException e )
-        {
-            errorCallback.invoke( e.getMessage() );
-        }
-    }
-
+    
     @ReactMethod
     public void isOnline( Callback successCallback, Callback errorCallback )
     {
         try
         {
-            successCallback.invoke( gymService.isOnline() );
+            successCallback.invoke( curseService.isOnline() );
         }
         catch( IllegalViewOperationException e )
         {
@@ -65,7 +46,7 @@ public class TestModule extends ReactContextBaseJavaModule
     {
         try
         {
-            gymService.update_local();
+            curseService.update_local();
             successCallback.invoke();
         }
         catch( Exception e )
@@ -79,7 +60,7 @@ public class TestModule extends ReactContextBaseJavaModule
     {
         try
         {
-            successCallback.invoke( ObjectConverters.toJSon( gymService.login( username, password ) ) );
+            successCallback.invoke( ObjectConverters.toJSon( curseService.login( username, password ) ) );
         }
         catch( Exception e )
         {
@@ -92,7 +73,7 @@ public class TestModule extends ReactContextBaseJavaModule
     {
         try
         {
-            successCallback.invoke( ObjectConverters.toJSon( gymService.getLoggedUser() ) );
+            successCallback.invoke( ObjectConverters.toJSon( curseService.getLoggedUser() ) );
         }
         catch( Exception e )
         {
@@ -101,11 +82,11 @@ public class TestModule extends ReactContextBaseJavaModule
     }
 
     @ReactMethod
-    public void addClass( String gymClassJson, Callback successCallback, Callback errorCallback )
+    public void getCurse( Callback successCallback, Callback errorCallback )
     {
         try
         {
-            successCallback.invoke( ObjectConverters.toJSon( gymService.addClass( ObjectConverters.toObject( gymClassJson, GymClass.class ) ) ) );
+            successCallback.invoke( ObjectConverters.toJSon( curseService.getCurse() ) );
         }
         catch( Exception e )
         {
@@ -114,11 +95,11 @@ public class TestModule extends ReactContextBaseJavaModule
     }
 
     @ReactMethod
-    public void getClassSchedule( int class_id, Callback successCallback, Callback errorCallback )
+    public void getMotociclisti( Callback successCallback, Callback errorCallback )
     {
         try
         {
-            successCallback.invoke( ObjectConverters.toJSon( gymService.getClassSchedule( class_id ) ) );
+            successCallback.invoke( ObjectConverters.toJSon( curseService.getMotociclisti() ) );
         }
         catch( Exception e )
         {
@@ -127,11 +108,11 @@ public class TestModule extends ReactContextBaseJavaModule
     }
 
     @ReactMethod
-    public void addClassSchedule( String classScheduleJSon, Callback successCallback, Callback errorCallback )
+    public void getParticipanti( int cursa_id, Callback successCallback, Callback errorCallback )
     {
         try
         {
-            successCallback.invoke( ObjectConverters.toJSon( gymService.addClassSchedule( ObjectConverters.toObject( classScheduleJSon, ClassSchedule.class ) ) ) );
+            successCallback.invoke( ObjectConverters.toJSon( curseService.getParticipanti( cursa_id ) ) );
         }
         catch( Exception e )
         {
@@ -140,11 +121,76 @@ public class TestModule extends ReactContextBaseJavaModule
     }
 
     @ReactMethod
-    public void updateClassSchedule( ClassSchedule cs, Callback successCallback, Callback errorCallback )
+    public void getCursa( int id, Callback successCallback, Callback errorCallback  )
     {
         try
         {
-            gymService.updateClassSchedule( cs );
+            successCallback.invoke( ObjectConverters.toJSon( curseService.getCursa( id ) ) );
+        }
+        catch( Exception e )
+        {
+            errorCallback.invoke( e.getMessage() );
+        }
+    }
+
+    @ReactMethod
+    public void getMotociclist( int id, Callback successCallback, Callback errorCallback )
+    {
+        try
+        {
+            successCallback.invoke( ObjectConverters.toJSon( curseService.getMotociclist( id ) ) );
+        }
+        catch( Exception e )
+        {
+            errorCallback.invoke( e.getMessage() );
+        }
+    }
+
+    @ReactMethod
+    public void addCursa( String cursa, Callback successCallback, Callback errorCallback ) throws Exception
+    {
+        try
+        {
+            successCallback.invoke( ObjectConverters.toJSon( curseService.addCursa( ObjectConverters.toObject( cursa, Cursa.class ) ) ) );
+        }
+        catch( Exception e )
+        {
+            errorCallback.invoke( e.getMessage() );
+        }
+    }
+
+    @ReactMethod
+    public void addMotociclist( String m, Callback successCallback, Callback errorCallback ) throws Exception
+    {
+        try
+        {
+            successCallback.invoke( ObjectConverters.toJSon( curseService.addMotociclist( ObjectConverters.toObject( m, Motociclist.class ) ) ) );
+        }
+        catch( Exception e )
+        {
+            errorCallback.invoke( e.getMessage() );
+        }
+    }
+
+    @ReactMethod
+    public void addParticipare( String p, Callback successCallback, Callback errorCallback ) throws Exception
+    {
+        try
+        {
+            successCallback.invoke( ObjectConverters.toJSon( curseService.addParticipare( ObjectConverters.toObject( p, Participare.class ) ) ) );
+        }
+        catch( Exception e )
+        {
+            errorCallback.invoke( e.getMessage() );
+        }
+    }
+
+    @ReactMethod
+    public void deleteCursa( String el, Callback successCallback, Callback errorCallback ) throws Exception
+    {
+        try
+        {
+            curseService.deleteCursa( ObjectConverters.toObject( el, Cursa.class ) );
             successCallback.invoke();
         }
         catch( Exception e )
@@ -154,76 +200,11 @@ public class TestModule extends ReactContextBaseJavaModule
     }
 
     @ReactMethod
-    public void getClasses( Callback successCallback, Callback errorCallback )
+    public void deleteMotociclist( String el, Callback successCallback, Callback errorCallback ) throws Exception
     {
         try
         {
-            successCallback.invoke( ObjectConverters.toJSon( gymService.getClasses() ) );
-        }
-        catch( Exception e )
-        {
-            errorCallback.invoke( e.getMessage() );
-        }
-    }
-
-    @ReactMethod
-    public void getUsers ( Callback successCallback, Callback errorCallback )
-    {
-        try
-        {
-            successCallback.invoke( gymService.getUsers().toArray() );
-        }
-        catch( Exception e )
-        {
-            errorCallback.invoke( e.getMessage() );
-        }
-    }
-
-    @ReactMethod
-    public void getClassById( int id, Callback successCallback, Callback errorCallback )
-    {
-        try
-        {
-            successCallback.invoke( gymService.getClassById( id ) );
-        }
-        catch( Exception e )
-        {
-            errorCallback.invoke( e.getMessage() );
-        }
-    }
-
-    @ReactMethod
-    public void getUserById( int id, Callback successCallback, Callback errorCallback )
-    {
-        try
-        {
-            successCallback.invoke( gymService.getUserById( id ) );
-        }
-        catch( Exception e )
-        {
-            errorCallback.invoke( e.getMessage() );
-        }
-    }
-
-    @ReactMethod
-    public void getClassScheduleById( int id, Callback successCallback, Callback errorCallback )
-    {
-        try
-        {
-            successCallback.invoke( gymService.getClassScheduleById( id ) );
-        }
-        catch( Exception e )
-        {
-            errorCallback.invoke( e.getMessage() );
-        }
-    }
-
-    @ReactMethod
-    public void updateClass( GymClass gymClass, Callback successCallback, Callback errorCallback )
-    {
-        try
-        {
-            gymService.updateClass( gymClass );
+            curseService.deleteMotociclist( ObjectConverters.toObject( el, Motociclist.class ) );
             successCallback.invoke();
         }
         catch( Exception e )
@@ -233,11 +214,11 @@ public class TestModule extends ReactContextBaseJavaModule
     }
 
     @ReactMethod
-    public void deleteClassSchedule( ClassSchedule cs, Callback successCallback, Callback errorCallback )
+    public void updateCursa( String el, Callback successCallback, Callback errorCallback ) throws Exception
     {
         try
         {
-            gymService.deleteClassSchedule( cs );
+            curseService.updateCursa( ObjectConverters.toObject( el, Cursa.class ) );
             successCallback.invoke();
         }
         catch( Exception e )
@@ -247,37 +228,25 @@ public class TestModule extends ReactContextBaseJavaModule
     }
 
     @ReactMethod
-    public void giveFeedback( Feedback feedback, Callback successCallback, Callback errorCallback )
+    public void updateMotociclist( String el, Callback successCallback, Callback errorCallback ) throws Exception
     {
         try
         {
-            successCallback.invoke( gymService.giveFeedback( feedback ) );
+            curseService.updateMotociclist( ObjectConverters.toObject( el, Motociclist.class ) );
+            successCallback.invoke();
         }
         catch( Exception e )
         {
             errorCallback.invoke( e.getMessage() );
         }
     }
-
-    @ReactMethod
-    public void getFeedback( int trainer_id, Callback successCallback, Callback errorCallback )
-    {
-        try
-        {
-            successCallback.invoke( gymService.getFeedback( trainer_id ) );
-        }
-        catch( Exception e )
-        {
-            errorCallback.invoke( e.getMessage() );
-        }
-    }
-
+    
     @ReactMethod
     public void logout( Callback successCallback, Callback errorCallback )
     {
         try
         {
-            gymService.logout();
+            curseService.logout();
             successCallback.invoke();
         }
         catch( Exception e )
