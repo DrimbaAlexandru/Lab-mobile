@@ -15,6 +15,7 @@ import {
   ActivityIndicator
 } from 'react-native';
 import Native_bridge_test from './javaModuleWrapper';
+import GraphView from './GraphView';
 
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' +
@@ -22,6 +23,23 @@ const instructions = Platform.select({
   android: 'Double tap R on your keyboard to reload,\n' +
     'Shake or press menu button for dev menu',
 });
+
+class RCTGraphViewComponent extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+	 //return <Text>AHA</Text>;
+      return(
+		<View>
+			<Text>AHA</Text>
+			<GraphView style={{width: 300, height: 300}} dataSource={this.props.dataSource}/>
+			<Text>AHA</Text>
+		</View>
+	  ) ;
+  }
+}
 
 class TextThingy extends Component {
   render() {
@@ -96,6 +114,7 @@ export default class App extends Component<{}>
 	
     render()
     {
+		var data=[[1,2],[3,4]];
         return (
             <View>
                 <Button
@@ -131,6 +150,9 @@ export default class App extends Component<{}>
                 />
                 <Text>{this.state.showtext}</Text>
 				<LoadingCircleContainer doneLoading={this.state.doneLoading} />
+				
+				<Text>{data} gg</Text>
+				<RCTGraphViewComponent dataSource={data}/>
             </View>
         );
     }
