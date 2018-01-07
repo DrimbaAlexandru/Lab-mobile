@@ -19,7 +19,7 @@ export default class Elems extends Component {
     
     this.state = { actualData: [{Id: -1, name: 'Add New'}] };
     this.renderRow = this.renderRow.bind(this);
-	//setTimeout( function() { this.populateData()(); }.bind(this), 200);
+	setTimeout( function() { this.populateData(); }.bind(this), 200);
   }
   
   populateData()
