@@ -5,11 +5,13 @@ import android.app.AlertDialog;
 import android.arch.persistence.room.Room;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.example.alex.emptyapp.Domain.User;
 import com.example.alex.emptyapp.GUI.Admin.AdminDashboard;
@@ -64,6 +66,27 @@ public class MainActivity extends Activity
         }
         progressBar.setVisibility( View.INVISIBLE );
 
+    }
+
+
+    private void sendEmail()
+    {
+        String[] TO = {"animegirl3496@gmail.com"};
+        String[] CC = {""};
+        Intent emailIntent = new Intent(Intent.ACTION_SEND);
+        emailIntent.setData(Uri.parse("mailto:"));
+        emailIntent.setType("text/plain");
+        emailIntent.putExtra(Intent.EXTRA_EMAIL, TO);
+        emailIntent.putExtra(Intent.EXTRA_CC, CC);
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Subject of wonderful email");
+        emailIntent.putExtra(Intent.EXTRA_TEXT, "there, have some text as well");
+
+        try{
+            startActivity(Intent.createChooser(emailIntent, "Send mail..."));
+        }
+        catch (android.content.ActivityNotFoundException ex){
+            Toast.makeText(MainActivity.this, "There is no email client installed", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void start_app( User user )
@@ -127,6 +150,9 @@ public class MainActivity extends Activity
         }
 
         btn_login.setOnClickListener( view -> on_login() );
+
+        Button btn_mail = ( Button ) findViewById( R.id.btn_mail );
+        btn_mail.setOnClickListener( view -> sendEmail() );
 
     }
 /*
