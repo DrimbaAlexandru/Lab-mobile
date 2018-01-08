@@ -37,7 +37,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class GymService
 {
-    private final static String host = "http://192.168.0.105:63288";
+    private final static String host = "http://192.168.43.59:63288";
     private DBGymService db_srv;
     private RestGymService rest_srv;
 

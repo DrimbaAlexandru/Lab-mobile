@@ -40,7 +40,7 @@ export default class LogIn extends Component {
 					},
 					( errmsg ) =>
 					{
-					   alert( errmsg );
+					   alert( 'PUSCAT' + errmsg );
 					});
 				}
 				else

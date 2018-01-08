@@ -30,7 +30,7 @@ public interface RestClassRepository
     @POST( basePath )
     Call< GymClass > add( @Body GymClass elem );
 
-    @PUT( basePath + "{id}" )
+    @PUT( basePath + "/{id}" )
     public Call< Void > update( @Body GymClass elem, @Path( "id" ) int Id );
 
     @DELETE( basePath + "/{id}" )

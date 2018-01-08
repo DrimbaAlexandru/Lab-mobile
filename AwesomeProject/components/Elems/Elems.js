@@ -32,9 +32,9 @@ export default class Elems extends Component {
 			if( myObject.length > 0)
 			{
 				myObject.forEach( ( item, index ) => 
-					{
-						elements.push(item);
-					}
+				{
+					elements.push({Id: item.Id, name: item.Name});
+				}
 				);
 			}
 			else

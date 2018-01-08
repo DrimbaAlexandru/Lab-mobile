@@ -140,11 +140,11 @@ public class TestModule extends ReactContextBaseJavaModule
     }
 
     @ReactMethod
-    public void updateClassSchedule( ClassSchedule cs, Callback successCallback, Callback errorCallback )
+    public void updateClassSchedule( String cs, Callback successCallback, Callback errorCallback )
     {
         try
         {
-            gymService.updateClassSchedule( cs );
+            gymService.updateClassSchedule( ObjectConverters.toObject( cs, ClassSchedule.class ) );
             successCallback.invoke();
         }
         catch( Exception e )
@@ -171,7 +171,7 @@ public class TestModule extends ReactContextBaseJavaModule
     {
         try
         {
-            successCallback.invoke( gymService.getUsers().toArray() );
+            successCallback.invoke( ObjectConverters.toJSon( gymService.getUsers().toArray() ) );
         }
         catch( Exception e )
         {
@@ -184,7 +184,7 @@ public class TestModule extends ReactContextBaseJavaModule
     {
         try
         {
-            successCallback.invoke( gymService.getClassById( id ) );
+            successCallback.invoke( ObjectConverters.toJSon( gymService.getClassById( id ) ) );
         }
         catch( Exception e )
         {
@@ -197,7 +197,7 @@ public class TestModule extends ReactContextBaseJavaModule
     {
         try
         {
-            successCallback.invoke( gymService.getUserById( id ) );
+            successCallback.invoke( ObjectConverters.toJSon( gymService.getUserById( id ) ) );
         }
         catch( Exception e )
         {
@@ -210,7 +210,7 @@ public class TestModule extends ReactContextBaseJavaModule
     {
         try
         {
-            successCallback.invoke( gymService.getClassScheduleById( id ) );
+            successCallback.invoke( ObjectConverters.toJSon( gymService.getClassScheduleById( id ) ) );
         }
         catch( Exception e )
         {
@@ -219,11 +219,11 @@ public class TestModule extends ReactContextBaseJavaModule
     }
 
     @ReactMethod
-    public void updateClass( GymClass gymClass, Callback successCallback, Callback errorCallback )
+    public void updateClass( String gymClass, Callback successCallback, Callback errorCallback )
     {
         try
         {
-            gymService.updateClass( gymClass );
+            gymService.updateClass( ObjectConverters.toObject( gymClass, GymClass.class ) );
             successCallback.invoke();
         }
         catch( Exception e )
@@ -233,11 +233,11 @@ public class TestModule extends ReactContextBaseJavaModule
     }
 
     @ReactMethod
-    public void deleteClassSchedule( ClassSchedule cs, Callback successCallback, Callback errorCallback )
+    public void deleteClassSchedule( String cs, Callback successCallback, Callback errorCallback )
     {
         try
         {
-            gymService.deleteClassSchedule( cs );
+            gymService.deleteClassSchedule( ObjectConverters.toObject( cs, ClassSchedule.class ) );
             successCallback.invoke();
         }
         catch( Exception e )
@@ -246,6 +246,7 @@ public class TestModule extends ReactContextBaseJavaModule
         }
     }
 
+    /*
     @ReactMethod
     public void giveFeedback( Feedback feedback, Callback successCallback, Callback errorCallback )
     {
@@ -271,7 +272,7 @@ public class TestModule extends ReactContextBaseJavaModule
             errorCallback.invoke( e.getMessage() );
         }
     }
-
+*/
     @ReactMethod
     public void logout( Callback successCallback, Callback errorCallback )
     {
