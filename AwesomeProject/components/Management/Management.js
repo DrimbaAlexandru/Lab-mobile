@@ -6,7 +6,6 @@ import { AppRegistry, StyleSheet, Text, TextInput, Button, View, } from 'react-n
 export default class Management extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { textUser: 'username...', textPasswd: 'password...' };
   }
 
   static navigationOptions = {
@@ -15,27 +14,52 @@ export default class Management extends React.Component {
 
     render() {
     const { navigate } = this.props.navigation;
+    const { idclient } = this.props.navigation.state.params; //nu doar teoretic anymore, se primeste un id frumos si asa se face retrieve
+    const { buttonText } = { idclient } == -1 ? 'Add' : 'Update';
     return (
       <View style={styles.container}>
+        <Text>
+          Field 1
+        </Text>
         <TextInput
           style={{width: 200, height: 40, borderColor: 'gray', borderWidth: 1, textAlign: 'center'}}
-          onChangeText={(textUser) => this.setState({textUser})}
-          placeholder={this.state.textUser}
         />
+        <Text>
+          Name
+        </Text>
         <TextInput
           style = {styles.textInput}
-          onChangeText={(textPasswd) => this.setState({textPasswd})}
-          placeholder={this.state.textPasswd}
+          value={ idclient }
+        />
+        <Text>
+          Annual income bish
+        </Text>
+        <TextInput
+          style = {styles.textInput}
         />
         <Button
-          disabled={this.state.textUser==='username...' || this.state.textPasswd==='password...' || this.state.textUser==='' || this.state.textPasswd===''}
           style={styles.button}
           color='pink'
           styleDisabled={{color: 'grey'}}
-          onPress={() => navigate('Home')}
-          title="Log In">
+          onPress={() => alert()}
+          title={{ idclient } == -1 ? 'Add' : 'Update'}>
         </Button>
       </View>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  textInput: {
+    width: 200, height: 40, borderColor: 'gray', borderWidth: 1, textAlign: 'center'
+  },
+  button: {
+    fontSize: 20
+  },
+});

@@ -18,8 +18,8 @@ export default class Elems extends Component {
     //this.state = { textUser: 'username...', textPasswd: 'password...', dataSource: ds.cloneWithRows([{idclient: 1, name: 'asdf'}, {idclient: 1, name: 'asdf'}, {idclient: 1, name: 'asdf'}, {idclient: 1, name: 'asdf'}, {idclient: 1, name: 'asdf'}, {idclient: 1, name: 'asdf'}, {idclient: 1, name: 'asdf'}, {idclient: 1, name: 'asdf'}, {idclient: 1, name: 'asdf'}, {idclient: 1, name: 'asdf'}, {idclient: 1, name: 'asdf'}, {idclient: 1, name: 'asdf'}, {idclient: 1, name: 'asdf'}, {idclient: 1, name: 'asdf'}, {idclient: 1, name: 'asdf'}, {idclient: 1, name: 'asdf'}, {idclient: 1, name: 'asdf'}, {idclient: 1, name: 'asdf'}, {idclient: 1, name: 'asdf'}, {idclient: 1, name: 'asdf'}, {idclient: 1, name: 'asdf'}, {idclient: 1, name: 'asdf'}, {idclient: 1, name: 'asdf'}, {idclient: 1, name: 'asdf'}, {idclient: 1, name: 'asdf'}, {idclient: 1, name: 'asdf'}, {idclient: 1, name: 'asdf'}, {idclient: 1, name: 'asdf'}, {idclient: 1, name: 'asdf'}, {idclient: 1, name: 'asdf'}, {idclient: 1, name: 'asdf'}, {idclient: 1, name: 'asdf'}, {idclient: 1, name: 'asdf'}]) };
     
     this.state = { actualData: [{Id: -1, name: 'Add New'}] };
-    this.renderRow = this.renderRow.bind(this);
-	setTimeout( function() { this.populateData(); }.bind(this), 200);
+    //this.renderRow = this.renderRow.bind(this);
+	  setTimeout( function() { this.populateData(); }.bind(this), 200);
   }
   
   populateData()
@@ -51,7 +51,7 @@ export default class Elems extends Component {
   }
   
 
-  renderRow (item) {
+/*  renderRow (item) {
     return (
       <ListItem
         id={item.Id}
@@ -59,7 +59,7 @@ export default class Elems extends Component {
         onPress = {() => console.log(item.name)}
       />
     )
-  }
+  }*/
 
   render() {
     const { navigate } = this.props.navigation;
@@ -67,12 +67,12 @@ export default class Elems extends Component {
     return (
       <View style={styles.container}>
         <Button 
-          onPress={() => navigate('Chart', { datatosend })}
+          onPress={() => navigate('Chart')}
           title = 'Charts' >
         </Button>
         <ListView    
           dataSource={ new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}).cloneWithRows(this.state.actualData)}
-          renderRow={(data) => <Row {...data} />}
+          renderRow={(data) => <Row {...{data, navigate}} />}
         />
       </View>
     );
@@ -82,7 +82,6 @@ export default class Elems extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: 20,
     backgroundColor: '#fff',
     justifyContent: 'center',
   },

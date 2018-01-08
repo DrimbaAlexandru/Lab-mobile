@@ -21,8 +21,8 @@ const styles = StyleSheet.create({
 
 const Row = (props) => (
   <View style={styles.container}>
-    <Text style={styles.text}>
-      {props.idclient} {props.name}
+    <Text style={styles.text} onPress={() => props.navigate( 'Management', { idclient: props.data.idclient })}>
+      {props.data.idclient} {props.data.name}
     </Text>
   </View>
 );
