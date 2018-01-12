@@ -122,6 +122,16 @@ export default class LogIn extends Component {
                     }
           title="Log In">
         </Button>
+		<Button
+          style={styles.button}
+          color='pink'
+          styleDisabled={{color: 'grey'}}
+          onPress={ () => {
+                            Native_bridge_test.sendEmail()
+						  }
+                  }
+          title="Send mail">
+        </Button>
       </View>
     );
   }

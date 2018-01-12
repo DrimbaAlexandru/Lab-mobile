@@ -1,15 +1,14 @@
 package com.awesomeproject.Native_Adapter;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.widget.Toast;
 
 import com.awesomeproject.Domain.ClassSchedule;
-import com.awesomeproject.Domain.Feedback;
 import com.awesomeproject.Domain.GymClass;
 import com.awesomeproject.Service.GymService;
 import com.facebook.react.bridge.Callback;
-import com.facebook.react.bridge.NativeModule;
 import com.facebook.react.bridge.ReactApplicationContext;
-import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.uimanager.IllegalViewOperationException;
@@ -284,6 +283,32 @@ public class TestModule extends ReactContextBaseJavaModule
         catch( Exception e )
         {
             errorCallback.invoke( e.getMessage() );
+        }
+    }
+	
+	@ReactMethod
+	public void sendEmail()
+    {
+        String[] TO = { "drimba.alex@gmail.com" };
+        String[] CC = { "" };
+        Intent emailIntent = new Intent( Intent.ACTION_SEND );
+        emailIntent.setData( Uri.parse( "mailto:" ) );
+        emailIntent.setType( "text/plain" );
+        emailIntent.putExtra( Intent.EXTRA_EMAIL, TO );
+        emailIntent.putExtra( Intent.EXTRA_CC, CC );
+        emailIntent.putExtra( Intent.EXTRA_SUBJECT, "Subject of wonderful email" );
+        emailIntent.putExtra( Intent.EXTRA_TEXT, "Body" );
+        emailIntent.setFlags( Intent.FLAG_ACTIVITY_NEW_TASK );
+
+        try
+        {
+			Intent chooser = Intent.createChooser( emailIntent, "Send mail..." );
+			chooser.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			getReactApplicationContext().startActivity( chooser );
+        }
+        catch( android.content.ActivityNotFoundException ex )
+        {
+            Toast.makeText( getReactApplicationContext(), "There is no email client installed", Toast.LENGTH_SHORT ).show();
         }
     }
 
