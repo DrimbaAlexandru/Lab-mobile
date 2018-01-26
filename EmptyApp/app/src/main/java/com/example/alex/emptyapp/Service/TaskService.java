@@ -81,21 +81,18 @@ public class TaskService
         RemoteUpdateStatus status = result.second;
 
         switch(status) {
-            case OK:
-                db_srv.updateElement(resTask);
-                return UpdateStatus.OK;
             case CONFLICT:
                 return UpdateStatus.CONFLICT;
             case NETWORK_ERROR:
                 return UpdateStatus.NETWORK_ERROR;
             case ALREADY_DELETED:
-
                 MyTask oldVersion = db_srv.getById(task.getId());
                 oldVersion.setStatus("deleted");
                 db_srv.updateElement(oldVersion);
-
+                return UpdateStatus.OK;
+            default: // CASE OK
+                db_srv.updateElement(resTask);
                 return UpdateStatus.OK;
         }
-
     }
 }
