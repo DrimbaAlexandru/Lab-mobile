@@ -3,13 +3,21 @@ package com.example.alex.emptyapp.Domain;
 /**
  * Created by Alex on 26.01.2018.
  */
-
 public class MyTask extends BaseModel
 {
+    private int id;
     private String text;
     private String status;
     private int updated;
     private int version = 1;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public int getUpdated()
     {

@@ -14,5 +14,4 @@ public abstract class AppDB extends RoomDatabase
     public abstract DBTaskRepository taskRepository();
 
     public abstract DBStaticsRepository DBStaticsRepository();
-
 }

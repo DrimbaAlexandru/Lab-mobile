@@ -6,6 +6,7 @@ import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
 
+import com.example.alex.emptyapp.Domain.MyTask;
 import com.example.alex.emptyapp.Repository.Interfaces.ITaskRepository;
 
 import java.util.List;
@@ -15,25 +16,26 @@ import java.util.List;
  */
 
 @Dao
-public interface DBTaskRepository extends ITaskRepository
+public interface DBTaskRepository
 {
-    @Override
-    @Query( "SELECT * FROM GymClass WHERE Id == :Id" )
-    GymClass getById( int Id );
+    @Query( "SELECT * FROM MyTask" )
+    List<MyTask> getAll();
 
-    @Override
-    @Query( "SELECT * FROM GymClass" )
-    List<GymClass> getAll();
+    @Query("DELETE FROM MyTask")
+    void deleteAll();
 
-    @Override
+    @Query("SELECT * FROM MyTask WHERE ID = :id")
+    MyTask getById(int id);
+
     @Insert
-    void add( GymClass elem );
+    void insert(MyTask tasks);
 
-    @Override
+    @Insert
+    void batchInsert(List<MyTask> tasks);
+
     @Update
-    void update( GymClass elem );
+    void batchUpdate(List<MyTask> tasks);
 
-    @Override
-    @Delete
-    void remove( GymClass elem );
+    @Update
+    void update( MyTask elem );
 }
