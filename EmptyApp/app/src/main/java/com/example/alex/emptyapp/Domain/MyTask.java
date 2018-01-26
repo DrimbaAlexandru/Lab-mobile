@@ -9,20 +9,10 @@ import android.arch.persistence.room.PrimaryKey;
 @Entity(tableName = "MyTask")
 public class MyTask extends BaseModel
 {
-    @PrimaryKey
-    private int id;
     private String text;
     private String status;
     private int updated;
     private int version = 1;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public int getUpdated()
     {
