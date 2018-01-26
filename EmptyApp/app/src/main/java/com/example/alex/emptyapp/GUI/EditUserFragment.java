@@ -16,8 +16,8 @@ public class EditUserFragment extends Fragment {
 
     private void initialize()
     {
-        ( ( TextView )fuckingView.findViewById( R.id.txt_name ) ).setText( loggedUser.getName() );
-        ( ( TextView )fuckingView.findViewById( R.id.txt_mail ) ).setText( loggedUser.getEmail() );
+        ( ( TextView )fuckingView.findViewById( R.id.txt_text_nou ) ).setText( loggedUser.getName() );
+        ( ( TextView )fuckingView.findViewById( R.id.txt_conflict ) ).setText( loggedUser.getEmail() );
     }
 
     private void submit()
@@ -30,7 +30,7 @@ public class EditUserFragment extends Fragment {
     {
         loggedUser = ( User )getArguments().getSerializable( "loggedUser" );
         // Inflate the layout for this fragment
-        fuckingView = inflater.inflate( R.layout.fragment_edit_user, container, false );
+        fuckingView = inflater.inflate( R.layout.edit_task, container, false );
         initialize();
         return fuckingView;
     }

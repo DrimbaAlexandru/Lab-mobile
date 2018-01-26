@@ -10,7 +10,10 @@ import com.example.alex.emptyapp.GUI.User.UserDashboard;
 import com.example.alex.emptyapp.R;
 import com.example.alex.emptyapp.Service.TaskService;
 
-public class MainActivity extends Activity
+import java.util.Observable;
+import java.util.Observer;
+
+public class MainActivity extends Activity implements Observer
 {
     private TaskService srv;
 
@@ -45,4 +48,9 @@ public class MainActivity extends Activity
         super.onResume();
     }
 
+    @Override
+    public void update( Observable observable, Object o )
+    {
+
+    }
 }
