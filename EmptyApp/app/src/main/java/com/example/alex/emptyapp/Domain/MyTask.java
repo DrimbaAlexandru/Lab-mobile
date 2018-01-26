@@ -1,9 +1,12 @@
 package com.example.alex.emptyapp.Domain;
 
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
+
 /**
  * Created by Alex on 26.01.2018.
  */
-
+@Entity(tableName = "MyTask")
 public class MyTask extends BaseModel
 {
     private String text;

@@ -3,10 +3,15 @@ package com.example.alex.emptyapp.Service;
 import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.os.StrictMode;
+import android.util.Pair;
 
+import com.example.alex.emptyapp.Domain.MyTask;
 import com.example.alex.emptyapp.Repository.Local.AppDB;
 import com.example.alex.emptyapp.Repository.Rest.RestTaskRepository;
 import com.google.gson.GsonBuilder;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -44,7 +49,48 @@ public class TaskService
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 
         StrictMode.setThreadPolicy( policy );
-
     }
 
+    public List<MyTask> getTasks() {
+        List<MyTask> data = rest_srv.getTasks(db_srv.getMaxUpdated());
+
+        // get new max updated
+        int maxUpdated = 0;
+        for(MyTask t : data) {
+            if(t.getUpdated() > maxUpdated)
+                maxUpdated = t.getUpdated();
+        }
+
+        // save to db
+        db_srv.setMaxUpdated(maxUpdated);
+        
+        // if any existing tasks are updated, update in the database
+        // insert any new tasks
+        db_srv.batchInsert(data);
+
+        // get the final tasks state
+        return db_srv.getAll();
+    }
+
+    public UpdateStatus updateTask(MyTask task) {
+
+        Pair<MyTask, RemoteUpdateStatus> result = rest_srv.updateTask(task);
+        MyTask resTask = result.first;
+        RemoteUpdateStatus status = result.second;
+
+        switch(status) {
+            case CONFLICT:
+                return UpdateStatus.CONFLICT;
+            case NETWORK_ERROR:
+                return UpdateStatus.NETWORK_ERROR;
+            case ALREADY_DELETED:
+                MyTask oldVersion = db_srv.getById(task.getId());
+                oldVersion.setStatus("deleted");
+                db_srv.updateElement(oldVersion);
+                return UpdateStatus.OK;
+            default: // CASE OK
+                db_srv.updateElement(resTask);
+                return UpdateStatus.OK;
+        }
+    }
 }

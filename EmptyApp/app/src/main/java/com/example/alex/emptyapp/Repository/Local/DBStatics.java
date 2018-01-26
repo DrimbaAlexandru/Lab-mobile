@@ -14,7 +14,12 @@ public class DBStatics
     public int dummy_key = 1;
 
     private int lastId = 1;
+
     private int maxUpdated = 0;
+
+    public int getMaxUpdated() {
+        return maxUpdated;
+    }
 
     public int getLastId()
     {
@@ -29,6 +34,11 @@ public class DBStatics
     public DBStatics incrementId()
     {
         lastId++;
+        return this;
+    }
+
+    public DBStatics setMaxUpdated(int maxUpdated) {
+        this.maxUpdated = maxUpdated;
         return this;
     }
 }
