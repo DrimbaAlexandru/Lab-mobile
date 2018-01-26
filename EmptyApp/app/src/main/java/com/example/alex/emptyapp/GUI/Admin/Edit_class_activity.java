@@ -2,7 +2,6 @@ package com.example.alex.emptyapp.GUI.Admin;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.arch.persistence.room.Room;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.ArraySet;
@@ -14,15 +13,8 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
 
-import com.example.alex.emptyapp.Domain.ClassSchedule;
-import com.example.alex.emptyapp.Domain.Difficulty;
-import com.example.alex.emptyapp.Domain.GymClass;
-import com.example.alex.emptyapp.Domain.Role;
-import com.example.alex.emptyapp.Domain.User;
 import com.example.alex.emptyapp.R;
-import com.example.alex.emptyapp.Repository.Local.AppDB;
-import com.example.alex.emptyapp.Service.DBGymService;
-import com.example.alex.emptyapp.Service.GymService;
+import com.example.alex.emptyapp.Service.TaskService;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -32,7 +24,7 @@ import java.util.Set;
 
 public class Edit_class_activity extends Activity
 {
-    private GymService srv;
+    private TaskService srv;
     private GymClass gymClass;
     private ClassSchedule editing_cs = null;
 
@@ -163,7 +155,7 @@ public class Edit_class_activity extends Activity
         super.onCreate( savedInstanceState );
         setContentView( R.layout.edit_class );
 
-        srv = new GymService( getApplicationContext() );
+        srv = new TaskService( getApplicationContext() );
 
         gymClass = srv.getClassById( ( int )getIntent().getSerializableExtra( "GymClassId" ) );
 

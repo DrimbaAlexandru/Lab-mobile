@@ -16,13 +16,10 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
-import com.example.alex.emptyapp.Domain.GymClass;
-import com.example.alex.emptyapp.Domain.Role;
-import com.example.alex.emptyapp.Domain.User;
 import com.example.alex.emptyapp.GUI.EditUserFragment;
 import com.example.alex.emptyapp.R;
 import com.example.alex.emptyapp.Repository.Local.AppDB;
-import com.example.alex.emptyapp.Service.DBGymService;
+import com.example.alex.emptyapp.Service.DBTaskService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +29,7 @@ import java.util.List;
  */
 
 public class AdminDashboard extends Activity {
-    private DBGymService srv;
+    private DBTaskService srv;
     private User user;
     private LinearLayout edit_user_container;
     private List< View > tabs = new ArrayList<>();
@@ -156,7 +153,7 @@ public class AdminDashboard extends Activity {
 
         AppDB db = Room.databaseBuilder( getApplicationContext(),
                                          AppDB.class, "PC-Local-DB" ).allowMainThreadQueries().build();
-        srv = new DBGymService( db.classRepository(), db.classScheduleRepository(), db.userRepository(), db.feedbackRepository(), db.loggedInUser() );
+        srv = new DBTaskService( db.taskRepository(), db.classScheduleRepository(), db.userRepository(), db.feedbackRepository(), db.DBStaticsRepository() );
 
         user = srv.getLoggedUser();
 

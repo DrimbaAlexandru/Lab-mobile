@@ -1,8 +1,5 @@
 package com.example.alex.emptyapp.Repository.Rest;
 
-import com.example.alex.emptyapp.Domain.GymClass;
-import com.example.alex.emptyapp.Repository.Interfaces.IClassRepository;
-
 import java.util.List;
 
 import retrofit2.Call;
@@ -17,7 +14,7 @@ import retrofit2.http.Path;
  * Created by Alex on 26.11.2017.
  */
 
-public interface RestClassRepository
+public interface RestTaskRepository
 {
     final String basePath = "Class";
 

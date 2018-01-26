@@ -6,8 +6,7 @@ import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
 
-import com.example.alex.emptyapp.Domain.GymClass;
-import com.example.alex.emptyapp.Repository.Interfaces.IClassRepository;
+import com.example.alex.emptyapp.Repository.Interfaces.ITaskRepository;
 
 import java.util.List;
 
@@ -16,7 +15,7 @@ import java.util.List;
  */
 
 @Dao
-public interface DBClassRepository extends IClassRepository
+public interface DBTaskRepository extends ITaskRepository
 {
     @Override
     @Query( "SELECT * FROM GymClass WHERE Id == :Id" )

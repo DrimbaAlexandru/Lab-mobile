@@ -7,9 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.alex.emptyapp.Domain.User;
 import com.example.alex.emptyapp.R;
-import com.example.alex.emptyapp.Service.DBGymService;
 
 public class EditUserFragment extends Fragment {
 

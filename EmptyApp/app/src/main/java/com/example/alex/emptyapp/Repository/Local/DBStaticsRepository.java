@@ -19,9 +19,6 @@ public interface DBStaticsRepository
     @Update
     public void setDBStatics( DBStatics DBStatics );
 
-    @Query( "Update DBStatics set loggedUserID = 0" )
-    public void logout();
-
     @Query( "Delete from DBStatics" )
     public void clear();
 

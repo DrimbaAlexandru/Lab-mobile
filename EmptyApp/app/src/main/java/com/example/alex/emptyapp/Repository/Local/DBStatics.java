@@ -13,18 +13,8 @@ public class DBStatics
     @PrimaryKey
     public int dummy_key = 1;
 
-    private int loggedUserID = 0;
     private int lastId = 1;
-
-    public int getLoggedUserID()
-    {
-        return loggedUserID;
-    }
-
-    public void setLoggedUserID( int loggedUserID )
-    {
-        this.loggedUserID = loggedUserID;
-    }
+    private int maxUpdated = 0;
 
     public int getLastId()
     {
