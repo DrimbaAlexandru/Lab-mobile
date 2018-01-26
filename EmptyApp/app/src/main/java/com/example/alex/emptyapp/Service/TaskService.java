@@ -63,9 +63,7 @@ public class TaskService
 
         // save to db
         db_srv.setMaxUpdated(maxUpdated);
-
-        // THIS CODE IS SHIT FAIR WARNING
-
+        
         // if any existing tasks are updated, update in the database
         // insert any new tasks
         db_srv.batchInsert(data);
