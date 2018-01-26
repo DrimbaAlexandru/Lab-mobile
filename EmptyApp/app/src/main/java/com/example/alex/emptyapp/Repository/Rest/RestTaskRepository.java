@@ -21,9 +21,9 @@ public interface RestTaskRepository
 {
     final String basePath = "task/";
 
-    @GET(basePath)
-    Call<List<MyTask>> getTasks(@Query("lastUpdated") Long lastModified);
+    @GET( basePath )
+    Call< List< MyTask > > getTasks( @Query( "lastUpdated" ) Long lastModified );
 
-    @PUT(basePath + "id/")
-    Call<MyTask> updateTask(@Path("id") int id, @Body MyTask task);
+    @PUT( basePath + "id/" )
+    Call< MyTask > updateTask( @Path( "id" ) int id, @Body MyTask task );
 }

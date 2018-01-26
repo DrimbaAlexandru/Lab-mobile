@@ -4,6 +4,7 @@ package com.example.alex.emptyapp.Controller;
 
 import com.example.alex.emptyapp.Domain.MyTask;
 import com.example.alex.emptyapp.Service.TaskService;
+import com.example.alex.emptyapp.Service.UpdateStatus;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -55,16 +56,17 @@ public class Controller extends Observable
                 {
                     for( int i = 0; i < upload_queue.size(); i++ )
                     {
-                        Object response = service.put_task( upload_queue.get( i ) );
-                        switch( response ) // if task upload succeeds
+                        UpdateStatus status = service.updateTask( upload_queue.get( i ) );
+                        switch( status ) // if task upload succeeds
                         {
-                            case Ok:
-                            case Conflict:
+                            case CONFLICT:
                                 conflict_list.put( upload_queue.get( i ).getId(), upload_queue.get( i ) );
-                            default:
+                            case OK:
                                 setChanged();
                                 upload_queue.remove( i ); // remove task from the upload queue
                                 i--;
+                                break;
+                            case NETWORK_ERROR:
                                 break;
                         }
                     }
@@ -74,8 +76,8 @@ public class Controller extends Observable
             {
                 if( service.updateLocal() )
                 {
-                    tasks_downloaded = service.get_tasks_downloaded();
-                    tasks_uploaded = service.get_tasks_uploaded();
+                    tasks_downloaded = service.getTasks_downloaded();
+                    tasks_uploaded = service.getTasks_uploaded();
                     setChanged();
                 }
             }
@@ -107,17 +109,12 @@ public class Controller extends Observable
 
     public List<MyTask> getAllTasks()
     {
-        return null;
-    }
-
-    public MyTask geyById( int Id )
-    {
-        return null;
+        return service.getTasks();
     }
 
     public void deleteTaskFromLocal( int Id )
     {
-
+        service.deleteTaskLocal( Id );
     }
 
     public void updateTask( MyTask task )

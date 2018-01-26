@@ -25,6 +25,8 @@ public class TaskService
     private final static String host = "http://192.168.0.101:63288";
     private DBTaskService db_srv;
     private RestTaskService rest_srv;
+    private int tasks_downloaded = 0;
+    private int tasks_uploaded = 0;
 
     public boolean isOnline()
     {
@@ -51,46 +53,78 @@ public class TaskService
         StrictMode.setThreadPolicy( policy );
     }
 
-    public List<MyTask> getTasks() {
-        List<MyTask> data = rest_srv.getTasks(db_srv.getMaxUpdated());
+    public boolean updateLocal()
+    {
+        List< MyTask > data = rest_srv.getTasks( db_srv.getMaxUpdated() );
 
         // get new max updated
         int maxUpdated = 0;
-        for(MyTask t : data) {
-            if(t.getUpdated() > maxUpdated)
+        for( MyTask t : data )
+        {
+            if( t.getUpdated() > maxUpdated )
+            {
                 maxUpdated = t.getUpdated();
+            }
         }
 
         // save to db
-        db_srv.setMaxUpdated(maxUpdated);
-        
+        db_srv.setMaxUpdated( maxUpdated );
+
         // if any existing tasks are updated, update in the database
         // insert any new tasks
-        db_srv.batchInsert(data);
+        db_srv.batchInsert( data );
+        tasks_downloaded += data.size();
+        return data.size() > 0;
+    }
 
+    public List< MyTask > getTasks()
+    {
         // get the final tasks state
         return db_srv.getAll();
     }
 
-    public UpdateStatus updateTask(MyTask task) {
-
-        Pair<MyTask, RemoteUpdateStatus> result = rest_srv.updateTask(task);
+    public UpdateStatus updateTask( MyTask task )
+    {
+        Pair< MyTask, RemoteUpdateStatus > result = rest_srv.updateTask( task );
         MyTask resTask = result.first;
         RemoteUpdateStatus status = result.second;
 
-        switch(status) {
+        switch( status )
+        {
             case CONFLICT:
+                tasks_uploaded++;
                 return UpdateStatus.CONFLICT;
             case NETWORK_ERROR:
                 return UpdateStatus.NETWORK_ERROR;
             case ALREADY_DELETED:
-                MyTask oldVersion = db_srv.getById(task.getId());
-                oldVersion.setStatus("deleted");
-                db_srv.updateElement(oldVersion);
+                tasks_uploaded++;
+                MyTask oldVersion = db_srv.getById( task.getId() );
+                oldVersion.setStatus( "deleted" );
+                db_srv.updateElement( oldVersion );
                 return UpdateStatus.OK;
             default: // CASE OK
-                db_srv.updateElement(resTask);
+                tasks_uploaded++;
+                db_srv.updateElement( resTask );
                 return UpdateStatus.OK;
         }
+    }
+
+    public int getTasks_uploaded()
+    {
+        int v = tasks_uploaded;
+        tasks_uploaded = 0;
+        return v;
+    }
+
+    public int getTasks_downloaded()
+    {
+        int v = tasks_downloaded;
+        tasks_downloaded = 0;
+        return v;
+    }
+
+    public void deleteTaskLocal( int Id )
+    {
+        db_srv.deleteById( Id );
     }
 }

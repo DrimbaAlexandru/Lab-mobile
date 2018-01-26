@@ -20,10 +20,10 @@ public class DBTaskService implements Serializable
     DBTaskRepository taskRepo;
     DBStaticsRepository dbStaticsRepo;
 
-    public DBTaskService( DBTaskRepository cR, DBStaticsRepository liu )
+    public DBTaskService( DBTaskRepository cR, DBStaticsRepository dbsr )
     {
         taskRepo = cR;
-        dbStaticsRepo = liu;
+        dbStaticsRepo = dbsr;
 
         if( dbStaticsRepo.getDBStatics() == null )
         {
@@ -33,42 +33,57 @@ public class DBTaskService implements Serializable
         }
     }
 
-    public void resetCache(List<MyTask> newState) {
+    public void resetCache( List< MyTask > newState )
+    {
         taskRepo.deleteAll();
-        taskRepo.batchInsert(newState);
+        taskRepo.batchInsert( newState );
     }
 
-    public void resetElements(List<MyTask> updatedTasks) {
-        for(MyTask t: updatedTasks) {
-            taskRepo.update(t);
+    public void resetElements( List< MyTask > updatedTasks )
+    {
+        for( MyTask t : updatedTasks )
+        {
+            taskRepo.update( t );
         }
     }
 
-    public void insertTask(MyTask task) {
-        taskRepo.insert(task);
+    public void insertTask( MyTask task )
+    {
+        taskRepo.insert( task );
     }
 
-    public void batchInsert(List<MyTask> tasks) {
-        taskRepo.batchInsert(tasks);
+    public void batchInsert( List< MyTask > tasks )
+    {
+        taskRepo.batchInsert( tasks );
     }
 
-    public void updateElement(MyTask task) {
-        taskRepo.update(task);
+    public void updateElement( MyTask task )
+    {
+        taskRepo.update( task );
     }
 
-    public List<MyTask> getAll() {
+    public List< MyTask > getAll()
+    {
         return taskRepo.getAll();
     }
 
-    public MyTask getById(int id) {
-        return taskRepo.getById(id);
+    public MyTask getById( int id )
+    {
+        return taskRepo.getById( id );
     }
 
-    public void setMaxUpdated(int maxUpdated) {
-        dbStaticsRepo.setDBStatics(dbStaticsRepo.getDBStatics().setMaxUpdated(maxUpdated));
+    public void setMaxUpdated( int maxUpdated )
+    {
+        dbStaticsRepo.setDBStatics( dbStaticsRepo.getDBStatics().setMaxUpdated( maxUpdated ) );
     }
 
-    public long getMaxUpdated(){
+    public long getMaxUpdated()
+    {
         return dbStaticsRepo.getDBStatics().getMaxUpdated();
+    }
+
+    public void deleteById( int id )
+    {
+        taskRepo.deleteById( id );
     }
 }

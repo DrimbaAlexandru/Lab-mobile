@@ -26,41 +26,52 @@ public class RestTaskService
         taskRepo = tR;
     }
 
-    List<MyTask> getTasks(Long lastModified) {
-        try {
-            Response<List<MyTask>> resp = taskRepo.getTasks(lastModified).execute();
+    List< MyTask > getTasks( Long lastModified )
+    {
+        try
+        {
+            Response< List< MyTask > > resp = taskRepo.getTasks( lastModified ).execute();
 
-            if(resp.code() == 200)
+            if( resp.code() == 200 )
+            {
                 return resp.body();
+            }
 
-        }catch(IOException e) {
+        }
+        catch( IOException e )
+        {
             e.printStackTrace();
         }
         return new ArrayList<>();
     }
 
-    Pair<MyTask, RemoteUpdateStatus> updateTask(MyTask task) {
+    Pair< MyTask, RemoteUpdateStatus > updateTask( MyTask task )
+    {
+        try
+        {
+            Response< MyTask > resp = taskRepo.updateTask( task.getId(), task ).execute();
 
-        try {
-            Response<MyTask> resp = taskRepo.updateTask(task.getId(), task).execute();
-
-            if(resp.code() ==  412) {
-                return new Pair<>(null, RemoteUpdateStatus.ALREADY_DELETED);
+            if( resp.code() == 412 )
+            {
+                return new Pair<>( null, RemoteUpdateStatus.ALREADY_DELETED );
             }
 
-            if(resp.code() == 409) {
-                return new Pair<>(null, RemoteUpdateStatus.CONFLICT);
+            if( resp.code() == 409 )
+            {
+                return new Pair<>( null, RemoteUpdateStatus.CONFLICT );
             }
 
-            if(resp.code() == 200) {
-                return new Pair<>(resp.body(), RemoteUpdateStatus.OK);
+            if( resp.code() == 200 )
+            {
+                return new Pair<>( resp.body(), RemoteUpdateStatus.OK );
             }
-
-        }catch(IOException e) {
+        }
+        catch( IOException e )
+        {
             e.printStackTrace();
         }
 
-        return new Pair<>(null, RemoteUpdateStatus.NETWORK_ERROR);
+        return new Pair<>( null, RemoteUpdateStatus.NETWORK_ERROR );
     }
 
 }

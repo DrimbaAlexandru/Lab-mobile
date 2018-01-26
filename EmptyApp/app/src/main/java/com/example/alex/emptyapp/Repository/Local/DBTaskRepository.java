@@ -20,23 +20,27 @@ import java.util.List;
 public interface DBTaskRepository
 {
     @Query( "SELECT * FROM MyTask" )
-    List<MyTask> getAll();
+    List< MyTask > getAll();
 
-    @Query("DELETE FROM MyTask")
+    @Query( "DELETE FROM MyTask" )
     void deleteAll();
 
-    @Query("SELECT * FROM MyTask WHERE ID = :id")
-    MyTask getById(int id);
+    @Query( "DELETE FROM MyTask WHERE ID = :id" )
+    void deleteById( int id );
+
+    @Query( "SELECT * FROM MyTask WHERE ID = :id" )
+    MyTask getById( int id );
 
     @Insert
-    void insert(MyTask tasks);
+    void insert( MyTask tasks );
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void batchInsert(List<MyTask> tasks);
+    @Insert( onConflict = OnConflictStrategy.REPLACE )
+    void batchInsert( List< MyTask > tasks );
 
     @Update
-    void batchUpdate(List<MyTask> tasks);
+    void batchUpdate( List< MyTask > tasks );
 
     @Update
     void update( MyTask elem );
+
 }

@@ -5,8 +5,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 
-import com.example.alex.emptyapp.GUI.Trainer.TrainerDashboard;
-import com.example.alex.emptyapp.GUI.User.UserDashboard;
 import com.example.alex.emptyapp.R;
 import com.example.alex.emptyapp.Service.TaskService;
 

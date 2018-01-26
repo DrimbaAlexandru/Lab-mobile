@@ -16,7 +16,6 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
-import com.example.alex.emptyapp.GUI.EditUserFragment;
 import com.example.alex.emptyapp.R;
 import com.example.alex.emptyapp.Repository.Local.AppDB;
 import com.example.alex.emptyapp.Service.DBTaskService;
