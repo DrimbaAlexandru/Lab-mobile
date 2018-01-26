@@ -48,6 +48,10 @@ public class DBTaskService implements Serializable
         taskRepo.insert(task);
     }
 
+    public void batchInsert(List<MyTask> tasks) {
+        taskRepo.batchInsert(tasks);
+    }
+
     public void updateElement(MyTask task) {
         taskRepo.update(task);
     }

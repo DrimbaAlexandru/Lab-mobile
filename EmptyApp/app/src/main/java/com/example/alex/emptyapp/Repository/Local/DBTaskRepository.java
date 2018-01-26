@@ -3,6 +3,7 @@ package com.example.alex.emptyapp.Repository.Local;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
+import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
 
@@ -30,7 +31,7 @@ public interface DBTaskRepository
     @Insert
     void insert(MyTask tasks);
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void batchInsert(List<MyTask> tasks);
 
     @Update

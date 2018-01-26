@@ -68,13 +68,7 @@ public class TaskService
 
         // if any existing tasks are updated, update in the database
         // insert any new tasks
-        for(MyTask t: data) {
-            if(db_srv.getById(t.getId()) != null) {
-                db_srv.updateElement(t);
-            } else {
-                db_srv.insertTask(t);
-            }
-        }
+        db_srv.batchInsert(data);
 
         // get the final tasks state
         return db_srv.getAll();
