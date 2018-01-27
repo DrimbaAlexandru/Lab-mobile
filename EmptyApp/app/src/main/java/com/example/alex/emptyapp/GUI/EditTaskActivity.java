@@ -2,6 +2,8 @@ package com.example.alex.emptyapp.GUI;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.widget.Button;
+import android.widget.EditText;
 
 import com.example.alex.emptyapp.Controller.TaskController;
 import com.example.alex.emptyapp.Controller.TaskControllerSingleton;
@@ -30,26 +32,31 @@ public class EditTaskActivity extends Activity {
 
         controller = TaskControllerSingleton.getInstance();
 
-        if(baseTask.getVersion() == conflictTask.getVersion()) {
-            // setup layout for normal updates
-            setupUINormal();
+        setupUI(baseTask, conflictTask);
+    }
+
+    public void setupUI(MyTask baseTask, MyTask conflictTask) {
+        Button okButton = findViewById(R.id.confirmButton);
+        EditText etNewText = findViewById(R.id.txt_new);
+        EditText etOrigText = findViewById(R.id.txt_orig);
+
+        etOrigText.setText(baseTask.getText());
+
+        if(conflictTask.getVersion() != baseTask.getVersion()) {
+            etNewText.setText(conflictTask.getText());
         } else {
-            // setup layout for merging
-            setupUIConflict();
+            etNewText.setText("");
         }
 
-        setupHandlers();
-    }
+        okButton.setOnClickListener(e -> {
+            String newText = etNewText.getText().toString();
+            if(newText.length() != 0) {
+                conflictTask.setText(newText);
+                controller.resolveConflict(conflictTask);
 
-    public void setupUINormal() {
-
-    }
-
-    public void setupUIConflict() {
-
-    }
-
-    public void setupHandlers() {
-
+                // ends the activity
+                finish();
+            }
+        });
     }
 }
