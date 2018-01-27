@@ -72,12 +72,10 @@ public class EditTaskActivity extends Activity implements Observer
         if( conflictTask.getVersion() != baseTask.getVersion() )
         {
             etNewText.setText( conflictTask.getText() );
-            etNewText.setVisibility( View.VISIBLE );
         }
         else
         {
             etNewText.setText( "" );
-            etNewText.setVisibility( View.INVISIBLE );
         }
 
         okButton.setOnClickListener( e ->

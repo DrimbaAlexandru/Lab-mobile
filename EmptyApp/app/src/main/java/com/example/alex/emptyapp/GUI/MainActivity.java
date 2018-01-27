@@ -125,25 +125,29 @@ public class MainActivity extends Activity implements Observer
 
     private void populate_list()
     {
-        synchronized (tasks_list) {
+        synchronized( tasks_list )
+        {
             tasks_list.clear();
             ids_list.clear();
             String prefix;
-            for (MyTask t : controller.getAllTasks()) {
-                Log.d("MAIN-ACTIVITY", "TASK ID: " + t.getId());
-                Log.d("MAIN-ACTIVITY", "TASK STATUS: " + t.getStatus());
+            for( MyTask t : controller.getAllTasks() )
+            {
+                Log.d( "MAIN-ACTIVITY", "TASK ID: " + t.getId() );
+                Log.d( "MAIN-ACTIVITY", "TASK STATUS: " + t.getStatus() );
 
                 prefix = "";
-                if (t.getStatus().equals("deleted")) {
+                if( t.getStatus().equals( "deleted" ) )
+                {
                     prefix += "[deleted] ";
                 }
-                if (controller.getConflictOldValue(t.getId()) != null) {
+                if( controller.getConflictOldValue( t.getId() ) != null )
+                {
                     prefix += "[conflict] ";
                 }
-                tasks_list.add(prefix + t.getText());
-                ids_list.add(t.getId());
+                tasks_list.add( prefix + t.getText() );
+                ids_list.add( t.getId() );
             }
-            Log.i("Count", tasks_list.size() + "");
+            Log.i( "Count", tasks_list.size() + "" );
             listAdapter.notifyDataSetChanged();
         }
     }
