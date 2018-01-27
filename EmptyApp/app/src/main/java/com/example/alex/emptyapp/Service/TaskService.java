@@ -3,11 +3,13 @@ package com.example.alex.emptyapp.Service;
 import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.os.StrictMode;
+import android.util.Log;
 import android.util.Pair;
 
 import com.example.alex.emptyapp.Domain.MyTask;
 import com.example.alex.emptyapp.Repository.Local.AppDB;
 import com.example.alex.emptyapp.Repository.Rest.RestTaskRepository;
+import com.example.alex.emptyapp.R;
 import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
@@ -22,7 +24,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class TaskService
 {
-    private final static String host = "http://192.168.0.100:3000";
+    //private String host = "http://192.168.0.100:3000";
     private DBTaskService db_srv;
     private RestTaskService rest_srv;
     private int tasks_downloaded = 0;
@@ -38,6 +40,10 @@ public class TaskService
         AppDB db = Room.databaseBuilder( context,
                                          AppDB.class, "Local-DB" ).allowMainThreadQueries().build();
         db_srv = new DBTaskService( db.taskRepository(), db.DBStaticsRepository() );
+
+        String host = context.getString(R.string.alex_d_host);
+
+        Log.d("TASK-SERVICE", "HOST IS: " + host);
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl( host + "/" )

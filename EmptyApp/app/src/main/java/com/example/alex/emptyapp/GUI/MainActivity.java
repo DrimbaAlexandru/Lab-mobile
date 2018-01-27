@@ -3,12 +3,12 @@ package com.example.alex.emptyapp.GUI;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import com.example.alex.emptyapp.Controller.TaskController;
@@ -55,6 +55,7 @@ public class MainActivity extends Activity implements Observer
 
         list = ( ListView )findViewById( R.id.list_tasks );
 
+        final Activity activityInstance = this;
         listAdapter = new ArrayAdapter< String >( MainActivity.this, android.R.layout.simple_list_item_1, tasks_list );
         list.setAdapter( listAdapter );
         list.setOnItemClickListener( new AdapterView.OnItemClickListener()
@@ -66,6 +67,11 @@ public class MainActivity extends Activity implements Observer
                 MyTask conflict = controller.getConflictOldValue( ids_list.get( i ) );
                 //Do stuff with these values.
                 Log.i( "Clicked item", task.getText() + task.getId() );
+
+                Intent editTaskIntent = new Intent(activityInstance, EditTaskActivity.class);
+                editTaskIntent.putExtra("base-task", task);
+                editTaskIntent.putExtra("conflict-task", conflict == null? task : conflict);
+                activityInstance.startActivity(editTaskIntent);
             }
         } );
 

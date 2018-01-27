@@ -11,17 +11,17 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
-        <activity android:name=".GUI.MainActivity">
+        <activity android:name=".GUI.MainActivity"
+            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.ATTACH_DATA"/>
+            </intent-filter>
         </activity>
-        <activity android:name=".GUI.Admin.AdminDashboard"></activity>
-        <activity android:name=".GUI.Admin.Edit_class_activity"></activity>
-        <activity android:name=".GUI.User.UserDashboard"></activity>
-        <activity android:name=".GUI.Trainer.TrainerDashboard"></activity>
+        <activity android:name=".GUI.EditTaskActivity"></activity>
     </application>
 
 </manifest>
