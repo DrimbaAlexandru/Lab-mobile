@@ -72,9 +72,11 @@ public class DBTaskService implements Serializable
         return taskRepo.getById( id );
     }
 
-    public void setMaxUpdated( int maxUpdated )
+    public void setMaxUpdated( long maxUpdated )
     {
-        dbStaticsRepo.setDBStatics( dbStaticsRepo.getDBStatics().setMaxUpdated( maxUpdated ) );
+        DBStatics dbs = dbStaticsRepo.getDBStatics();
+        dbs.setMaxUpdated( maxUpdated );
+        dbStaticsRepo.setDBStatics( dbs );
     }
 
     public long getMaxUpdated()

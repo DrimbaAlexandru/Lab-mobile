@@ -2,6 +2,8 @@ package com.example.alex.emptyapp.Controller;
 
 
 
+import android.util.Log;
+
 import com.example.alex.emptyapp.Domain.MyTask;
 import com.example.alex.emptyapp.Service.TaskService;
 import com.example.alex.emptyapp.Service.UpdateStatus;
@@ -17,7 +19,7 @@ import java.util.Observer;
  * Created by Alex on 26.01.2018.
  */
 
-public class Controller extends Observable
+public class TaskController extends Observable
 {
     private boolean run_updater = true;
     private Thread updater = null;
@@ -31,7 +33,7 @@ public class Controller extends Observable
     private final List< MyTask > upload_queue = new ArrayList<>();
     private final Map< Integer, MyTask > conflict_list = new HashMap<>();
 
-    public Controller( TaskService srv )
+    public TaskController( TaskService srv )
     {
         service = srv;
         updater = new Thread( new Runnable()
@@ -74,12 +76,20 @@ public class Controller extends Observable
             }
             if( ticks % 5 == 0 ) // 5 sec processing
             {
-                if( service.updateLocal() )
+                try
                 {
-                    tasks_downloaded = service.getTasks_downloaded();
-                    tasks_uploaded = service.getTasks_uploaded();
-                    setChanged();
+                    if( service.updateLocal() )
+                    {
+                        tasks_downloaded = service.getTasks_downloaded();
+                        tasks_uploaded = service.getTasks_uploaded();
+                        setChanged();
+                    }
                 }
+                catch( Exception e )
+                {
+                    Log.wtf( "WTF", e.getMessage() );
+                }
+
             }
 
             if( hasChanged() )
@@ -88,6 +98,7 @@ public class Controller extends Observable
             }
 
             notifyObservers();
+            ticks++;
             try
             {
                 Thread.sleep( tick_time );
@@ -110,6 +121,11 @@ public class Controller extends Observable
     public List<MyTask> getAllTasks()
     {
         return service.getTasks();
+    }
+
+    public MyTask getTaskById( int Id )
+    {
+        return service.getTaskById( Id );
     }
 
     public void deleteTaskFromLocal( int Id )

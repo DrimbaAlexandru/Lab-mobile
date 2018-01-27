@@ -15,9 +15,9 @@ public class DBStatics
 
     private int lastId = 1;
 
-    private int maxUpdated = 0;
+    private long maxUpdated = 0;
 
-    public int getMaxUpdated() {
+    public long getMaxUpdated() {
         return maxUpdated;
     }
 
@@ -31,14 +31,13 @@ public class DBStatics
         this.lastId = lastId;
     }
 
-    public DBStatics incrementId()
+    public void incrementId()
     {
         lastId++;
-        return this;
     }
 
-    public DBStatics setMaxUpdated(int maxUpdated) {
+    public void setMaxUpdated( long maxUpdated )
+    {
         this.maxUpdated = maxUpdated;
-        return this;
     }
 }

@@ -11,10 +11,10 @@ public class MyTask extends BaseModel
 {
     private String text;
     private String status;
-    private int updated;
+    private long updated;
     private int version = 1;
 
-    public int getUpdated()
+    public long getUpdated()
     {
         return updated;
     }
@@ -44,7 +44,7 @@ public class MyTask extends BaseModel
         this.text = text;
     }
 
-    public void setUpdated( int updated )
+    public void setUpdated( long updated )
     {
         this.updated = updated;
     }

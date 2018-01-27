@@ -22,7 +22,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class TaskService
 {
-    private final static String host = "http://192.168.0.101:63288";
+    private final static String host = "http://192.168.0.100:3000";
     private DBTaskService db_srv;
     private RestTaskService rest_srv;
     private int tasks_downloaded = 0;
@@ -40,7 +40,7 @@ public class TaskService
         db_srv = new DBTaskService( db.taskRepository(), db.DBStaticsRepository() );
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl( host + "/api/" )
+                .baseUrl( host + "/" )
                 .addConverterFactory( GsonConverterFactory.create( new GsonBuilder().create() ) )
                 .build();
 
@@ -58,7 +58,7 @@ public class TaskService
         List< MyTask > data = rest_srv.getTasks( db_srv.getMaxUpdated() );
 
         // get new max updated
-        int maxUpdated = 0;
+        long maxUpdated = 0;
         for( MyTask t : data )
         {
             if( t.getUpdated() > maxUpdated )
@@ -68,7 +68,10 @@ public class TaskService
         }
 
         // save to db
-        db_srv.setMaxUpdated( maxUpdated );
+        if( maxUpdated > 0 )
+        {
+            db_srv.setMaxUpdated( maxUpdated );
+        }
 
         // if any existing tasks are updated, update in the database
         // insert any new tasks
@@ -121,6 +124,11 @@ public class TaskService
         int v = tasks_downloaded;
         tasks_downloaded = 0;
         return v;
+    }
+
+    public MyTask getTaskById( int Id )
+    {
+        return db_srv.getById( Id );
     }
 
     public void deleteTaskLocal( int Id )
