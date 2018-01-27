@@ -105,7 +105,7 @@ public class MainActivity extends Activity implements Observer
     protected void onResume()
     {
         super.onResume();
-        TaskControllerSingleton.getInstance().addObserver( this );
+        controller.addObserver( this );
     }
 
     @Override
@@ -114,6 +114,11 @@ public class MainActivity extends Activity implements Observer
         runOnUiThread( ()->
                        {
                            populate_list();
+                           final int d = controller.getTasks_downloaded(), u = controller.getTasks_uploaded();
+                           if( d + u > 0 )
+                           {
+                               show_text_dialog( "Tasks downloaded: " + d + "\nTasks uploaded: " + u, "Summary" );
+                           }
                        });
 
     }
@@ -141,5 +146,12 @@ public class MainActivity extends Activity implements Observer
             Log.i("Count", tasks_list.size() + "");
             listAdapter.notifyDataSetChanged();
         }
+    }
+
+    @Override
+    protected void onPause()
+    {
+        super.onPause();
+        controller.deleteObserver( this );
     }
 }

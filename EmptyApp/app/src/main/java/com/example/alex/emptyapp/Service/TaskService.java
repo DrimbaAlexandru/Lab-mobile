@@ -42,9 +42,9 @@ public class TaskService
                                          AppDB.class, "Local-DB" ).allowMainThreadQueries().build();
         db_srv = new DBTaskService( db.taskRepository(), db.DBStaticsRepository() );
 
-        String host = context.getString(R.string.alex_d_host);
+        String host = context.getString( R.string.drimba_host );
 
-        Log.d("TASK-SERVICE", "HOST IS: " + host);
+        Log.d( "TASK-SERVICE", "HOST IS: " + host );
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl( host + "/" )
