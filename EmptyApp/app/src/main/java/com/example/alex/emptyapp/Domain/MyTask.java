@@ -1,17 +1,20 @@
 package com.example.alex.emptyapp.Domain;
 
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
+
 /**
  * Created by Alex on 26.01.2018.
  */
-
+@Entity(tableName = "MyTask")
 public class MyTask extends BaseModel
 {
     private String text;
     private String status;
-    private int updated;
+    private long updated;
     private int version = 1;
 
-    public int getUpdated()
+    public long getUpdated()
     {
         return updated;
     }
@@ -41,7 +44,7 @@ public class MyTask extends BaseModel
         this.text = text;
     }
 
-    public void setUpdated( int updated )
+    public void setUpdated( long updated )
     {
         this.updated = updated;
     }
