@@ -26,7 +26,7 @@ public class MainActivity extends Activity implements Observer
     private TaskController controller = null;
     private ListView list;
     private ArrayList< Integer > ids_list = new ArrayList<>();
-    private List< String > tasks_list = new ArrayList<>();
+    private final List< String > tasks_list = new ArrayList<>();
     private ArrayAdapter listAdapter = null;
 
     private void show_text_dialog( String msg, String title )
@@ -68,6 +68,21 @@ public class MainActivity extends Activity implements Observer
                 //Do stuff with these values.
                 Log.i( "Clicked item", task.getText() + task.getId() );
 
+                if(task.getStatus().equals("deleted")) {
+
+                    Log.d("MAIN-ACTIVITY", "REMOVING DELETED TASK FROM VIEW: " + task.getText());
+
+                    // RACE CONDITION. What if the remove happens after the list is cleared
+                    // but before the task list is populated again?
+                    synchronized (tasks_list) {
+                        tasks_list.remove(i);
+                        listAdapter.notifyDataSetChanged();
+                    }
+
+                    controller.deleteTaskFromLocal(task.getId());
+                    return;
+                }
+
                 boolean foundConflict = conflict != null;
                 Intent editTaskIntent = new Intent(activityInstance, EditTaskActivity.class);
 
@@ -104,28 +119,26 @@ public class MainActivity extends Activity implements Observer
 
     private void populate_list()
     {
-        tasks_list.clear();
-        ids_list.clear();
-        String prefix;
-        for( MyTask t : controller.getAllTasks() )
-        {
-            Log.d("MAIN-ACTIVITY", "TASK ID: " + t.getId());
-            Log.d("MAIN-ACTIVITY", "TASK STATUS: " + t.getStatus());
+        synchronized (tasks_list) {
+            tasks_list.clear();
+            ids_list.clear();
+            String prefix;
+            for (MyTask t : controller.getAllTasks()) {
+                Log.d("MAIN-ACTIVITY", "TASK ID: " + t.getId());
+                Log.d("MAIN-ACTIVITY", "TASK STATUS: " + t.getStatus());
 
-            prefix = "";
-            if( t.getStatus().equals( "deleted" ) )
-            {
-                prefix += "[deleted] ";
+                prefix = "";
+                if (t.getStatus().equals("deleted")) {
+                    prefix += "[deleted] ";
+                }
+                if (controller.getConflictOldValue(t.getId()) != null) {
+                    prefix += "[conflict] ";
+                }
+                tasks_list.add(prefix + t.getText());
+                ids_list.add(t.getId());
             }
-            if( controller.getConflictOldValue( t.getId() ) != null )
-            {
-                prefix += "[conflict] ";
-            }
-            tasks_list.add( prefix + t.getText() );
-            ids_list.add( t.getId() );
+            Log.i("Count", tasks_list.size() + "");
+            listAdapter.notifyDataSetChanged();
         }
-        Log.i( "Count", tasks_list.size()+"" );
-        listAdapter.notifyDataSetChanged();
-
     }
 }
