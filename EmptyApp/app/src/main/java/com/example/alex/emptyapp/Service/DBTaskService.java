@@ -1,14 +1,11 @@
 package com.example.alex.emptyapp.Service;
 
 import com.example.alex.emptyapp.Domain.MyTask;
-import com.example.alex.emptyapp.Repository.Interfaces.ITaskRepository;
 import com.example.alex.emptyapp.Repository.Local.DBStaticsRepository;
 import com.example.alex.emptyapp.Repository.Local.DBStatics;
 import com.example.alex.emptyapp.Repository.Local.DBTaskRepository;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -33,18 +30,21 @@ public class DBTaskService implements Serializable
         }
     }
 
-    public void resetCache( List< MyTask > newState )
+    public void setElemsCount( int count )
     {
-        taskRepo.deleteAll();
-        taskRepo.batchInsert( newState );
+        DBStatics dbs = dbStaticsRepo.getDBStatics();
+        dbs.setNr_elemente( count );
+        dbStaticsRepo.setDBStatics( dbs );
     }
 
-    public void resetElements( List< MyTask > updatedTasks )
+    public int getElemsCount()
     {
-        for( MyTask t : updatedTasks )
-        {
-            taskRepo.update( t );
-        }
+        return dbStaticsRepo.getDBStatics().getNr_elemente();
+    }
+
+    public void resetCache()
+    {
+        taskRepo.deleteAll();
     }
 
     public void insertTask( MyTask task )
@@ -72,20 +72,30 @@ public class DBTaskService implements Serializable
         return taskRepo.getById( id );
     }
 
-    public void setMaxUpdated( long maxUpdated )
+    public void setLastModified( long lastModified )
     {
         DBStatics dbs = dbStaticsRepo.getDBStatics();
-        dbs.setMaxUpdated( maxUpdated );
+        dbs.setLastModified( lastModified );
         dbStaticsRepo.setDBStatics( dbs );
     }
 
-    public long getMaxUpdated()
+    public long getLastModified()
     {
-        return dbStaticsRepo.getDBStatics().getMaxUpdated();
+        return dbStaticsRepo.getDBStatics().getLastModified();
     }
 
     public void deleteById( int id )
     {
         taskRepo.deleteById( id );
+    }
+
+    public List< MyTask > getByPage( int page )
+    {
+        return taskRepo.getPage( page );
+    }
+
+    public void deletePage( int page )
+    {
+        taskRepo.deleteByPage( page );
     }
 }

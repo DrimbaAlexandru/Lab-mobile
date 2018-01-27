@@ -5,6 +5,7 @@ import android.util.Pair;
 
 import com.example.alex.emptyapp.Domain.MyTask;
 import com.example.alex.emptyapp.Repository.Rest.RestTaskRepository;
+import com.example.alex.emptyapp.Repository.Rest.TaskServerResponse;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -26,52 +27,36 @@ public class RestTaskService
         taskRepo = tR;
     }
 
-    List< MyTask > getTasks( Long lastModified )
+    TaskServerResponse getTasks( int page, Long lastModified ) throws IOException
     {
-        try
-        {
-            Response< List< MyTask > > resp = taskRepo.getTasks( lastModified ).execute();
+        Response< TaskServerResponse > resp = taskRepo.getTasks( lastModified.toString(), page ).execute();
 
-            if( resp.code() == 200 )
+        if( resp.code() == 200 )
+        {
+            TaskServerResponse response = resp.body();
+            try
             {
-                return resp.body();
+                response.lastModified = Long.parseLong( resp.headers().get( "Last-Modified" ) );
             }
-
+            catch( Exception e )
+            {
+                return null;
+            }
+            return response;
         }
-        catch( IOException e )
+        if( resp.code() == 304 )
         {
-            e.printStackTrace();
+            TaskServerResponse response = new TaskServerResponse();
+            response.lastModified = lastModified;
         }
-        return new ArrayList<>();
+
+        return null;
     }
 
-    Pair< MyTask, RemoteUpdateStatus > updateTask( MyTask task )
+    boolean deleteTask( int Id ) throws IOException
     {
-        try
-        {
-            Response< MyTask > resp = taskRepo.updateTask( task.getId(), task ).execute();
-
-            if( resp.code() == 412 )
-            {
-                return new Pair<>( null, RemoteUpdateStatus.ALREADY_DELETED );
-            }
-
-            if( resp.code() == 409 )
-            {
-                return new Pair<>( null, RemoteUpdateStatus.CONFLICT );
-            }
-
-            if( resp.code() == 200 )
-            {
-                return new Pair<>( resp.body(), RemoteUpdateStatus.OK );
-            }
-        }
-        catch( IOException e )
-        {
-            e.printStackTrace();
-        }
-
-        return new Pair<>( null, RemoteUpdateStatus.NETWORK_ERROR );
+        Response< Void > response = taskRepo.deleteTask( Id ).execute();
+        return ( response.code() == 204 );
     }
 
 }

@@ -22,11 +22,17 @@ public interface DBTaskRepository
     @Query( "SELECT * FROM MyTask" )
     List< MyTask > getAll();
 
+    @Query( "SELECT * FROM MyTask WHERE page = :page" )
+    List< MyTask > getPage( int page );
+
     @Query( "DELETE FROM MyTask" )
     void deleteAll();
 
     @Query( "DELETE FROM MyTask WHERE ID = :id" )
     void deleteById( int id );
+
+    @Query( "DELETE FROM MyTask WHERE page = :page" )
+    void deleteByPage( int page );
 
     @Query( "SELECT * FROM MyTask WHERE ID = :id" )
     MyTask getById( int id );

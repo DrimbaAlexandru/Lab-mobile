@@ -12,16 +12,11 @@ public class MyTask extends BaseModel
     private String text;
     private String status;
     private long updated;
-    private int version = 1;
+    private int page;
 
     public long getUpdated()
     {
         return updated;
-    }
-
-    public int getVersion()
-    {
-        return version;
     }
 
     public String getStatus()
@@ -49,8 +44,13 @@ public class MyTask extends BaseModel
         this.updated = updated;
     }
 
-    public void setVersion( int version )
+    public void setPage( int page )
     {
-        this.version = version;
+        this.page = page;
+    }
+
+    public int getPage()
+    {
+        return page;
     }
 }

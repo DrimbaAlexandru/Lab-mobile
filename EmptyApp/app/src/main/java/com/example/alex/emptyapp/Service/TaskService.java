@@ -10,9 +10,10 @@ import com.example.alex.emptyapp.Domain.MyTask;
 import com.example.alex.emptyapp.Repository.Local.AppDB;
 import com.example.alex.emptyapp.Repository.Rest.RestTaskRepository;
 import com.example.alex.emptyapp.R;
+import com.example.alex.emptyapp.Repository.Rest.TaskServerResponse;
 import com.google.gson.GsonBuilder;
 
-import java.util.ArrayList;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
@@ -28,8 +29,6 @@ public class TaskService
     //private String host = "http://192.168.0.100:3000";
     private DBTaskService db_srv;
     private RestTaskService rest_srv;
-    private int tasks_downloaded = 0;
-    private int tasks_uploaded = 0;
 
     public boolean isOnline()
     {
@@ -60,83 +59,62 @@ public class TaskService
         StrictMode.setThreadPolicy( policy );
     }
 
+    public boolean downloadPage( int page )
+    {
+        try
+        {
+            long lastModified = db_srv.getLastModified();
+            TaskServerResponse response = rest_srv.getTasks( page, lastModified );
+            if( response != null && response.lastModified > lastModified )
+            {
+                db_srv.setLastModified( response.lastModified );
+                db_srv.setElemsCount( response.count );
+                db_srv.deletePage( page );
+                for( MyTask t : response.tasks )
+                {
+                    t.setPage( response.page );
+                    db_srv.insertTask( t );
+                }
+                return true;
+            }
+            return response != null;
+        }
+        catch( IOException e )
+        {
+            return false;
+        }
+    }
+
     public boolean updateLocal()
     {
-        List< MyTask > data = rest_srv.getTasks( db_srv.getMaxUpdated() );
-
-        // get new max updated
-        long maxUpdated = 0;
-        for( MyTask t : data )
+        boolean success = true;
+        for( int page = 0; page < ( db_srv.getElemsCount() + 9 ) / 10; page++ )
         {
-            if( t.getUpdated() > maxUpdated )
+            success = success && downloadPage( page );
+        }
+        return success;
+    }
+
+    public List< MyTask > getPage( int page )
+    {
+        return db_srv.getByPage( page );
+    }
+
+    public boolean deleteTask( int Id )
+    {
+        try
+        {
+            if( rest_srv.deleteTask( Id ) )
             {
-                maxUpdated = t.getUpdated();
+                db_srv.deleteById( Id );
+                return true;
             }
+            return false;
         }
-
-        // save to db
-        if( maxUpdated > 0 )
+        catch( IOException e )
         {
-            db_srv.setMaxUpdated( maxUpdated );
+            return false;
         }
-
-        // if any existing tasks are updated, update in the database
-        // insert any new tasks
-        db_srv.batchInsert( data );
-        tasks_downloaded += data.size();
-        return data.size() > 0;
-    }
-
-    public List< MyTask > getTasks()
-    {
-        List<MyTask> data = db_srv.getAll();
-
-        Collections.sort(data, (a , b) -> {
-            return (int)(b.getUpdated() - a.getUpdated());
-        });
-
-        // get the final tasks state
-        return data;
-    }
-
-    public UpdateStatus updateTask( MyTask task )
-    {
-        Pair< MyTask, RemoteUpdateStatus > result = rest_srv.updateTask( task );
-        MyTask resTask = result.first;
-        RemoteUpdateStatus status = result.second;
-
-        switch( status )
-        {
-            case CONFLICT:
-                tasks_uploaded++;
-                return UpdateStatus.CONFLICT;
-            case NETWORK_ERROR:
-                return UpdateStatus.NETWORK_ERROR;
-            case ALREADY_DELETED:
-                tasks_uploaded++;
-                MyTask oldVersion = db_srv.getById( task.getId() );
-                oldVersion.setStatus( "deleted" );
-                db_srv.updateElement( oldVersion );
-                return UpdateStatus.OK;
-            default: // CASE OK
-                tasks_uploaded++;
-                db_srv.updateElement( resTask );
-                return UpdateStatus.OK;
-        }
-    }
-
-    public int getTasks_uploaded()
-    {
-        int v = tasks_uploaded;
-        tasks_uploaded = 0;
-        return v;
-    }
-
-    public int getTasks_downloaded()
-    {
-        int v = tasks_downloaded;
-        tasks_downloaded = 0;
-        return v;
     }
 
     public MyTask getTaskById( int Id )
@@ -144,8 +122,4 @@ public class TaskService
         return db_srv.getById( Id );
     }
 
-    public void deleteTaskLocal( int Id )
-    {
-        db_srv.deleteById( Id );
-    }
 }

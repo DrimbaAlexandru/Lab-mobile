@@ -6,14 +6,15 @@ import android.util.Log;
 
 import com.example.alex.emptyapp.Domain.MyTask;
 import com.example.alex.emptyapp.Service.TaskService;
-import com.example.alex.emptyapp.Service.UpdateStatus;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Set;
 
 /**
  * Created by Alex on 26.01.2018.
@@ -24,14 +25,11 @@ public class TaskController extends Observable
     private boolean run_updater = true;
     private Thread updater = null;
     private TaskService service = null;
-
-    private int tasks_downloaded = 0;
-    private int tasks_uploaded = 0;
+    private Set< TaskControllerStatus > status = new LinkedHashSet<>();
 
     private final int tick_time = 1000;
 
-    private final List< MyTask > upload_queue = new ArrayList<>();
-    private final Map< Integer, MyTask > conflict_list = new HashMap<>();
+    private final List< Integer > page_request_queue = new ArrayList<>();
 
     public TaskController( TaskService srv )
     {
@@ -52,24 +50,28 @@ public class TaskController extends Observable
         int ticks = 0;
         while( run_updater )
         {
+            status.remove( TaskControllerStatus.LOADING );
+            status.remove( TaskControllerStatus.FAILED_LOADING_FIRST_PAGE );
+            status.remove( TaskControllerStatus.FAILED_LOADING_PAGE );
             if( ticks % 1 == 0 ) // 1 sec processing
             {
-                synchronized( upload_queue )
+                synchronized( page_request_queue )
                 {
-                    for( int i = 0; i < upload_queue.size(); i++ )
+                    for( int i = 0; i < page_request_queue.size(); i++ )
                     {
-                        UpdateStatus status = service.updateTask( upload_queue.get( i ) );
-                        switch( status ) // if task upload succeeds
+                        if( service.downloadPage( page_request_queue.get( i ) ) )
                         {
-                            case CONFLICT:
-                                conflict_list.put( upload_queue.get( i ).getId(), upload_queue.get( i ) );
-                            case OK:
-                                setChanged();
-                                upload_queue.remove( i ); // remove task from the upload queue
-                                i--;
-                                break;
-                            case NETWORK_ERROR:
-                                break;
+                            page_request_queue.remove( i );
+                            i--;
+                            setChanged();
+                        }
+                        else
+                        {
+                            status.add( TaskControllerStatus.FAILED_LOADING_PAGE );
+                            if( page_request_queue.get( i ) == 0 )
+                            {
+                                status.add( TaskControllerStatus.FAILED_LOADING_FIRST_PAGE );
+                            }
                         }
                     }
                 }
@@ -78,10 +80,10 @@ public class TaskController extends Observable
             {
                 try
                 {
+                    //Update internet status
+
                     if( service.updateLocal() )
                     {
-                        tasks_downloaded = service.getTasks_downloaded();
-                        tasks_uploaded = service.getTasks_uploaded();
                         setChanged();
                     }
                 }
@@ -90,11 +92,6 @@ public class TaskController extends Observable
                     Log.wtf( "WTF", e.getMessage() );
                 }
 
-            }
-
-            if( hasChanged() )
-            {
-                service.updateLocal();
             }
 
             notifyObservers();
@@ -119,9 +116,9 @@ public class TaskController extends Observable
         notifyObservers();
     }
 
-    public List<MyTask> getAllTasks()
+    public List< MyTask > getPage( int page )
     {
-        return service.getTasks();
+        return service.getPage( page );
     }
 
     public MyTask getTaskById( int Id )
@@ -129,38 +126,19 @@ public class TaskController extends Observable
         return service.getTaskById( Id );
     }
 
-    public void deleteTaskFromLocal( int Id )
+    public void deleteTask( int Id )
     {
-        service.deleteTaskLocal( Id );
+        service.deleteTask( Id );
     }
 
-    public void updateTask( MyTask task )
+    public void requestPageReload( int page )
     {
-        synchronized( upload_queue )
+        synchronized( page_request_queue )
         {
-            upload_queue.add( task );
+            if( !page_request_queue.contains( page ) )
+            {
+                page_request_queue.add( page );
+            }
         }
-    }
-
-    public void resolveConflict(MyTask task) {
-        synchronized (conflict_list) {
-            conflict_list.remove(task.getId());
-            updateTask(task);
-        }
-    }
-
-    public int getTasks_downloaded()
-    {
-        return tasks_downloaded;
-    }
-
-    public int getTasks_uploaded()
-    {
-        return tasks_uploaded;
-    }
-
-    public MyTask getConflictOldValue( int Id )
-    {
-        return conflict_list.get( Id );
     }
 }

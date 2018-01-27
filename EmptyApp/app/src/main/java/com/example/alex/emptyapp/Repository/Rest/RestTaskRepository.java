@@ -8,6 +8,7 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
@@ -19,11 +20,11 @@ import retrofit2.http.Query;
 
 public interface RestTaskRepository
 {
-    final String basePath = "task/";
+    final String basePath = "task";
 
     @GET( basePath )
-    Call< List< MyTask > > getTasks( @Query( "lastUpdated" ) Long lastModified );
+    Call< TaskServerResponse > getTasks( @Header( "If-Modified-Since" ) String since, @Query( "page" ) int page );
 
-    @PUT( basePath + "{id}/" )
-    Call< MyTask > updateTask( @Path( "id" ) int id, @Body MyTask task );
+    @DELETE( basePath + "/{id}" )
+    Call< Void > deleteTask( @Path( "id" ) int id );
 }
