@@ -13,6 +13,7 @@ import com.example.alex.emptyapp.R;
 import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import retrofit2.Retrofit;
@@ -88,8 +89,14 @@ public class TaskService
 
     public List< MyTask > getTasks()
     {
+        List<MyTask> data = db_srv.getAll();
+
+        Collections.sort(data, (a , b) -> {
+            return (int)(b.getUpdated() - a.getUpdated());
+        });
+
         // get the final tasks state
-        return db_srv.getAll();
+        return data;
     }
 
     public UpdateStatus updateTask( MyTask task )
