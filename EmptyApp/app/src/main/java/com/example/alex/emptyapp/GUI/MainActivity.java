@@ -68,9 +68,17 @@ public class MainActivity extends Activity implements Observer
                 //Do stuff with these values.
                 Log.i( "Clicked item", task.getText() + task.getId() );
 
+                boolean foundConflict = conflict != null;
                 Intent editTaskIntent = new Intent(activityInstance, EditTaskActivity.class);
-                editTaskIntent.putExtra("base-task", task);
-                editTaskIntent.putExtra("conflict-task", conflict == null? task : conflict);
+
+                if(foundConflict) {
+                    editTaskIntent.putExtra("base-task", conflict);
+                    editTaskIntent.putExtra("conflict-task", task);
+                } else {
+                    editTaskIntent.putExtra("base-task", task);
+                    editTaskIntent.putExtra("conflict-task", task);
+                }
+
                 activityInstance.startActivity(editTaskIntent);
             }
         } );
@@ -101,6 +109,9 @@ public class MainActivity extends Activity implements Observer
         String prefix;
         for( MyTask t : controller.getAllTasks() )
         {
+            Log.d("MAIN-ACTIVITY", "TASK ID: " + t.getId());
+            Log.d("MAIN-ACTIVITY", "TASK STATUS: " + t.getStatus());
+
             prefix = "";
             if( t.getStatus().equals( "deleted" ) )
             {

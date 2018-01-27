@@ -141,6 +141,13 @@ public class TaskController extends Observable
         }
     }
 
+    public void resolveConflict(MyTask task) {
+        synchronized (conflict_list) {
+            conflict_list.remove(task.getId());
+            updateTask(task);
+        }
+    }
+
     public int getTasks_downloaded()
     {
         return tasks_downloaded;
