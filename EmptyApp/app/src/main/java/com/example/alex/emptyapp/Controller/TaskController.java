@@ -115,6 +115,7 @@ public class TaskController extends Observable
     public synchronized void addObserver( Observer o )
     {
         super.addObserver( o );
+        setChanged();
         notifyObservers();
     }
 
