@@ -76,6 +76,7 @@ public class MainActivity extends Activity implements Observer
                     // but before the task list is populated again?
                     synchronized (tasks_list) {
                         tasks_list.remove(i);
+                        ids_list.remove(i);
                         listAdapter.notifyDataSetChanged();
                     }
 
