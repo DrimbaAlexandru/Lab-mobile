@@ -72,6 +72,8 @@ public class TaskController extends Observable
                             {
                                 status.add( TaskControllerStatus.FAILED_LOADING_FIRST_PAGE );
                             }
+                            page_request_queue.remove( i );
+                            i--;
                         }
                     }
                 }
@@ -126,9 +128,9 @@ public class TaskController extends Observable
         return service.getTaskById( Id );
     }
 
-    public void deleteTask( int Id )
+    public boolean deleteTask( int Id )
     {
-        service.deleteTask( Id );
+        return service.deleteTask( Id );
     }
 
     public void requestPageReload( int page )
@@ -140,5 +142,15 @@ public class TaskController extends Observable
                 page_request_queue.add( page );
             }
         }
+    }
+
+    public int getTotalTaskCount()
+    {
+        return service.getTotalTaskCount();
+    }
+
+    public Set< TaskControllerStatus > getStatus()
+    {
+        return status;
     }
 }

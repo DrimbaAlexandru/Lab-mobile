@@ -21,7 +21,6 @@
                 <action android:name="android.intent.action.ATTACH_DATA"/>
             </intent-filter>
         </activity>
-        <activity android:name=".GUI.EditTaskActivity"></activity>
     </application>
 
 </manifest>

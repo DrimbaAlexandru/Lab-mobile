@@ -2,17 +2,24 @@ package com.example.alex.emptyapp.GUI;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.example.alex.emptyapp.Controller.TaskController;
 import com.example.alex.emptyapp.Controller.TaskControllerSingleton;
+import com.example.alex.emptyapp.Controller.TaskControllerStatus;
 import com.example.alex.emptyapp.Domain.MyTask;
 import com.example.alex.emptyapp.R;
 
@@ -27,6 +34,8 @@ public class MainActivity extends Activity implements Observer
     private ListView list;
     private ArrayList< Integer > ids_list = new ArrayList<>();
     private final List< String > tasks_list = new ArrayList<>();
+    private boolean loading_next_page = false;
+    private int next_page_to_load = 0;
     private ArrayAdapter listAdapter = null;
 
     private void show_text_dialog( String msg, String title )
@@ -53,6 +62,13 @@ public class MainActivity extends Activity implements Observer
         TaskControllerSingleton.setContext( getApplicationContext() );
         controller = TaskControllerSingleton.getInstance();
 
+        ActivityInfoComponent fragment = new ActivityInfoComponent();
+
+        FragmentManager manager = getFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        transaction.add( R.id.StatusFragment, fragment );
+        transaction.commit();
+
         list = ( ListView )findViewById( R.id.list_tasks );
 
         final Activity activityInstance = this;
@@ -63,39 +79,34 @@ public class MainActivity extends Activity implements Observer
             @Override
             public void onItemClick( AdapterView< ? > adapterView, View view, int i, long l )
             {
-                MyTask task = controller.getTaskById( ids_list.get( i ) );
-                MyTask conflict = controller.getConflictOldValue( ids_list.get( i ) );
-                //Do stuff with these values.
-                Log.i( "Clicked item", task.getText() + task.getId() );
-
-                if(task.getStatus().equals("deleted")) {
-
-                    Log.d("MAIN-ACTIVITY", "REMOVING DELETED TASK FROM VIEW: " + task.getText());
-
-                    // RACE CONDITION. What if the remove happens after the list is cleared
-                    // but before the task list is populated again?
-                    synchronized (tasks_list) {
-                        tasks_list.remove(i);
-                        ids_list.remove(i);
-                        listAdapter.notifyDataSetChanged();
-                    }
-
-                    controller.deleteTaskFromLocal(task.getId());
-                    return;
+                if( controller.deleteTask( ids_list.get( i ) ) )
+                {
+                    ids_list.remove( i );
+                    tasks_list.remove( i );
                 }
+            }
+        } );
 
-                boolean foundConflict = conflict != null;
-                Intent editTaskIntent = new Intent(activityInstance, EditTaskActivity.class);
+        list.setOnScrollListener( new AbsListView.OnScrollListener()
+        {
+            @Override
+            public void onScrollStateChanged( AbsListView absListView, int i )
+            {
+            }
 
-                if(foundConflict) {
-                    editTaskIntent.putExtra("base-task", conflict);
-                    editTaskIntent.putExtra("conflict-task", task);
-                } else {
-                    editTaskIntent.putExtra("base-task", task);
-                    editTaskIntent.putExtra("conflict-task", task);
+            @Override
+            public void onScroll( AbsListView absListView, int i, int i1, int i2 )
+            {
+                if( absListView.getLastVisiblePosition() == ids_list.size() - 1
+                    && !loading_next_page
+                    && ids_list.size() < controller.getTotalTaskCount() ) // Reached end of the list
+                {
+                    Log.i( "SCROLL", "Reached end of list and Should load more pages" );
+                    loading_next_page = true;
+                    next_page_to_load = ( ids_list.size() + 9 ) / 10;
+                    controller.requestPageReload( next_page_to_load );
+                    //request the controller to load next page
                 }
-
-                activityInstance.startActivity(editTaskIntent);
             }
         } );
 
@@ -114,13 +125,57 @@ public class MainActivity extends Activity implements Observer
         runOnUiThread( ()->
                        {
                            populate_list();
-                           final int d = controller.getTasks_downloaded(), u = controller.getTasks_uploaded();
-                           if( d + u > 0 )
+                           try
                            {
-                               show_text_dialog( "Tasks downloaded: " + d + "\nTasks uploaded: " + u, "Summary" );
+                               String status = "";
+                               boolean show_loading = false;
+                               boolean show_retry = false;
+                               if( controller.getStatus().contains( TaskControllerStatus.LOADING ) )
+                               {
+                                   status = "Loading...";
+                                   show_loading = true;
+                               }
+                               if( controller.getStatus().contains( TaskControllerStatus.FAILED_LOADING_PAGE ) )
+                               {
+                                   show_retry = true;
+                               }
+                               if( !controller.getStatus().contains( TaskControllerStatus.CONNECTED_TO_INTERNET ) )
+                               {
+                                   status = "Offline";
+                                   show_retry = false;
+                               }
+
+                               ( ( TextView )findViewById( R.id.StatusFragment ).findViewById( R.id.txt_status ) ).setText( status );
+                               ProgressBar pb = ( ( ProgressBar )findViewById( R.id.StatusFragment ).findViewById( R.id.progressBar ) );
+                               Button retry_button = findViewById( R.id.StatusFragment ).findViewById( R.id.btn_retry );
+                               if( show_loading )
+                               {
+                                   pb.setVisibility( View.VISIBLE );
+                               }
+                               else
+                               {
+                                   pb.setVisibility( View.INVISIBLE );
+                               }
+                               if( show_retry )
+                               {
+                                   retry_button.setVisibility( View.VISIBLE );
+                                   retry_button.setOnClickListener( ev ->
+                                                                    {
+                                                                        loading_next_page = true;
+                                                                        next_page_to_load = ( ids_list.size() + 9 ) / 10;
+                                                                        controller.requestPageReload( next_page_to_load );
+                                                                    } );
+                               }
+                               else
+                               {
+                                   retry_button.setVisibility( View.INVISIBLE );
+                               }
+                           }
+                           catch( Exception e )
+                           {
+                               show_text_dialog( e.getMessage(), "EXCEPTIONE" );
                            }
                        });
-
     }
 
     private void populate_list()
@@ -130,24 +185,19 @@ public class MainActivity extends Activity implements Observer
             tasks_list.clear();
             ids_list.clear();
             String prefix;
-            for( MyTask t : controller.getAllTasks() )
+            int page;
+            for( page = 0; page < ( controller.getTotalTaskCount() + 9 ) / 10; page++ )
             {
-                Log.d( "MAIN-ACTIVITY", "TASK ID: " + t.getId() );
-                Log.d( "MAIN-ACTIVITY", "TASK STATUS: " + t.getStatus() );
-
-                prefix = "";
-                if( t.getStatus().equals( "deleted" ) )
+                for( MyTask t : controller.getPage( page ) )
                 {
-                    prefix += "[deleted] ";
+                    tasks_list.add( t.getText() );
+                    ids_list.add( t.getId() );
                 }
-                if( controller.getConflictOldValue( t.getId() ) != null )
-                {
-                    prefix += "[conflict] ";
-                }
-                tasks_list.add( prefix + t.getText() );
-                ids_list.add( t.getId() );
             }
-            Log.i( "Count", tasks_list.size() + "" );
+            if( loading_next_page )
+            {
+                tasks_list.add( "Loading..." );
+            }
             listAdapter.notifyDataSetChanged();
         }
     }
@@ -158,4 +208,5 @@ public class MainActivity extends Activity implements Observer
         super.onPause();
         controller.deleteObserver( this );
     }
+
 }

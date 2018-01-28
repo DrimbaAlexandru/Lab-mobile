@@ -122,4 +122,8 @@ public class TaskService
         return db_srv.getById( Id );
     }
 
+    public int getTotalTaskCount()
+    {
+        return db_srv.getElemsCount();
+    }
 }
