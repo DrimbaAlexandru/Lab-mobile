@@ -2,6 +2,9 @@ package com.example.alex.emptyapp.Controller;
 
 
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.util.Log;
 
 import com.example.alex.emptyapp.Domain.MyTask;
@@ -30,6 +33,13 @@ public class TaskController extends Observable
     private final int tick_time = 1000;
 
     private final List< Integer > page_request_queue = new ArrayList<>();
+
+    private boolean isConnected()
+    {
+        ConnectivityManager cm = ( ConnectivityManager )service.getContext().getSystemService( Context.CONNECTIVITY_SERVICE );
+
+        return cm.getActiveNetworkInfo() != null;
+    }
 
     public TaskController( TaskService srv )
     {
@@ -82,7 +92,13 @@ public class TaskController extends Observable
             {
                 try
                 {
-                    //Update internet status
+                    if( isConnected() )
+                    {
+                        if( !status.contains( TaskControllerStatus.CONNECTED_TO_INTERNET ) )
+                        {
+                            status.add( TaskControllerStatus.CONNECTED_TO_INTERNET );
+                        }
+                    }//Update internet status
 
                     if( service.updateLocal() )
                     {

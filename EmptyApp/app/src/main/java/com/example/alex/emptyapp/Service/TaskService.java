@@ -29,14 +29,21 @@ public class TaskService
     //private String host = "http://192.168.0.100:3000";
     private DBTaskService db_srv;
     private RestTaskService rest_srv;
+    private Context context;
 
     public boolean isOnline()
     {
         return true;
     }
 
+    public Context getContext()
+    {
+        return context;
+    }
+
     public TaskService( Context context )
     {
+        this.context = context;
         AppDB db = Room.databaseBuilder( context,
                                          AppDB.class, "Local-DB" ).allowMainThreadQueries().build();
         db_srv = new DBTaskService( db.taskRepository(), db.DBStaticsRepository() );

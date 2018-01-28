@@ -57,9 +57,10 @@ public class MainActivity extends Activity implements Observer
     protected void onCreate( Bundle savedInstanceState )
     {
         super.onCreate( savedInstanceState );
+        TaskControllerSingleton.setContext( getApplicationContext() );
+
         setContentView( R.layout.activity_main );
 
-        TaskControllerSingleton.setContext( getApplicationContext() );
         controller = TaskControllerSingleton.getInstance();
 
         ActivityInfoComponent fragment = new ActivityInfoComponent();
