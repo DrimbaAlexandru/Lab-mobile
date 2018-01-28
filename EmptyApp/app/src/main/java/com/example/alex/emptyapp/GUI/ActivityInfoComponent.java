@@ -18,7 +18,8 @@ public class ActivityInfoComponent extends Fragment
     {
         // Required empty public constructor
         controller = TaskControllerSingleton.getInstance();
-    }
+		Log.d("ActivityInfoComponent", "In pula mea, Alex...");
+	}
 
     @Override
     public void onCreate( Bundle savedInstanceState )
