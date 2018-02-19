@@ -1,26 +1,28 @@
 package com.example.alex.emptyapp.Domain;
 
 import android.arch.persistence.room.PrimaryKey;
+import android.support.annotation.NonNull;
 
 import java.io.Serializable;
 
 public abstract class BaseModel implements Serializable
 {
     @PrimaryKey
-    private int Id;
+    @NonNull
+    private String code;
 
-    public int getId() {
-        return Id;
+    public String getCode() {
+        return code;
     }
 
-    public void setId( int id )
+    public void setCode( String code )
     {
-        Id = id;
+        this.code = code;
     }
 
     @Override
     public boolean equals( Object obj )
     {
-        return ( obj instanceof BaseModel ) && ( this.getId() == ( ( BaseModel )obj ).getId() );
+        return ( obj instanceof BaseModel ) && ( this.getCode().equals( ( ( BaseModel )obj ).getCode() ) );
     }
 }

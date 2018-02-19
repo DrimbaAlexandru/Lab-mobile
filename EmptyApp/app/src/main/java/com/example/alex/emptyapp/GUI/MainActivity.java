@@ -5,16 +5,23 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.util.Pair;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 
-import com.example.alex.emptyapp.Controller.TaskController;
-import com.example.alex.emptyapp.Controller.TaskControllerSingleton;
-import com.example.alex.emptyapp.Domain.MyTask;
+import com.example.alex.emptyapp.Controller.ObserverMessage;
+import com.example.alex.emptyapp.Controller.ProductController;
+import com.example.alex.emptyapp.Controller.ProductControllerSingleton;
+import com.example.alex.emptyapp.Domain.InregistrareProdus;
+import com.example.alex.emptyapp.Domain.ProductDescription;
 import com.example.alex.emptyapp.R;
+import com.example.alex.emptyapp.Service.ResponseStatus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,11 +30,17 @@ import java.util.Observer;
 
 public class MainActivity extends Activity implements Observer
 {
-    private TaskController controller = null;
+    private ProductController controller = null;
     private ListView list;
-    private ArrayList< Integer > ids_list = new ArrayList<>();
-    private final List< String > tasks_list = new ArrayList<>();
-    private ArrayAdapter listAdapter = null;
+    private ArrayList< String > ids_list = new ArrayList<>();
+    private final List< String > products_list = new ArrayList<>();
+    private CustomArrayAdapter listAdapter = null;
+
+    private int selected_item = -1;
+
+    private EditText txt_location;
+    private EditText txt_quantity;
+    private EditText txt_text;
 
     private void show_text_dialog( String msg, String title )
     {
@@ -50,55 +63,106 @@ public class MainActivity extends Activity implements Observer
         super.onCreate( savedInstanceState );
         setContentView( R.layout.activity_main );
 
-        TaskControllerSingleton.setContext( getApplicationContext() );
-        controller = TaskControllerSingleton.getInstance();
+        ProductControllerSingleton.setContext( getApplicationContext() );
+        controller = ProductControllerSingleton.getInstance();
+
+        txt_location = findViewById( R.id.txt_location );
+        txt_quantity = findViewById( R.id.txt_quantity );
+        txt_text = findViewById( R.id.txt_text );
 
         list = ( ListView )findViewById( R.id.list_tasks );
 
-        final Activity activityInstance = this;
-        listAdapter = new ArrayAdapter< String >( MainActivity.this, android.R.layout.simple_list_item_1, tasks_list );
+        listAdapter = new CustomArrayAdapter( MainActivity.this, android.R.layout.simple_list_item_1, products_list );
         list.setAdapter( listAdapter );
-        list.setOnItemClickListener( new AdapterView.OnItemClickListener()
+        list.setOnItemClickListener( ( AdapterView< ? > adapterView, View view, int i, long l ) ->
+                                     {
+                                         listAdapter.setSelected_position( i );
+                                     } );
+
+        Button btn_raport = findViewById( R.id.btn_report );
+        Button btn_download_all = findViewById( R.id.btn_download_all );
+        Button btn_submit_inregistrare = findViewById( R.id.btn_submit );
+
+        btn_submit_inregistrare.setOnClickListener( ev ->
+                                                    {
+                                                        try
+                                                        {
+                                                            if( selected_item < 0 || selected_item > controller.getCache().size() )
+                                                            {
+                                                                throw new Exception( "No item selected" );
+                                                            }
+                                                            ProductDescription pd = controller.getCache().get( selected_item );
+                                                            InregistrareProdus ip = new InregistrareProdus();
+                                                            ip.setLocation( txt_location.getText().toString() );
+                                                            ip.setQuantity( Integer.parseInt( txt_quantity.getText().toString() ) );
+                                                            ip.setCode( pd.getCode() );
+
+                                                            Inregistrare_Produs_Dialog dialog = new Inregistrare_Produs_Dialog();
+                                                            dialog.setController( controller );
+                                                            dialog.show( getFragmentManager(), "Inregistrare dialog" );
+                                                            controller.InregistrareProdus( ip );
+                                                        }
+                                                        catch( Exception e )
+                                                        {
+                                                            show_text_dialog( e.getMessage(), "Error!" );
+                                                            Log.e( "Error", e.getMessage() );
+                                                            e.printStackTrace();
+                                                        }
+                                                    } );
+
+        btn_raport.setOnClickListener( ev ->
+                                       {
+                                           try
+                                           {
+                                               Intent intent = new Intent( this, Raport_Activity.class );
+                                               intent.setFlags( Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_TASK_ON_HOME );
+                                               startActivity( intent );
+                                               controller.getRaport( txt_location.getText().toString() );
+                                           }
+                                           catch( Exception e )
+                                           {
+                                               show_text_dialog( e.getMessage(), "Error!" );
+                                               Log.e( "Error", e.getMessage() );
+                                               e.printStackTrace();
+                                           }
+                                       } );
+        btn_download_all.setOnClickListener( ev ->
+                                             {
+                                                 try
+                                                 {
+                                                     Download_Dialog dialog = new Download_Dialog();
+                                                     dialog.setController( controller );
+                                                     dialog.show( getFragmentManager(), "Download dialog" );
+                                                     controller.start_downloader();
+                                                 }
+                                                 catch( Exception e )
+                                                 {
+                                                     show_text_dialog( e.getMessage(), "Error!" );
+                                                     Log.e( "Error", e.getMessage() );
+                                                     e.printStackTrace();
+                                                 }
+                                             } );
+
+        txt_text.addTextChangedListener( new TextWatcher()
         {
             @Override
-            public void onItemClick( AdapterView< ? > adapterView, View view, int i, long l )
+            public void beforeTextChanged( CharSequence charSequence, int i, int i1, int i2 )
             {
-                MyTask task = controller.getTaskById( ids_list.get( i ) );
-                MyTask conflict = controller.getConflictOldValue( ids_list.get( i ) );
-                //Do stuff with these values.
-                Log.i( "Clicked item", task.getText() + task.getId() );
 
-                if(task.getStatus().equals("deleted")) {
+            }
 
-                    Log.d("MAIN-ACTIVITY", "REMOVING DELETED TASK FROM VIEW: " + task.getText());
+            @Override
+            public void onTextChanged( CharSequence charSequence, int i, int i1, int i2 )
+            {
+                controller.setDescription_filter( txt_text.getText().toString() );
+            }
 
-                    // RACE CONDITION. What if the remove happens after the list is cleared
-                    // but before the task list is populated again?
-                    synchronized (tasks_list) {
-                        tasks_list.remove(i);
-                        ids_list.remove(i);
-                        listAdapter.notifyDataSetChanged();
-                    }
+            @Override
+            public void afterTextChanged( Editable editable )
+            {
 
-                    controller.deleteTaskFromLocal(task.getId());
-                    return;
-                }
-
-                boolean foundConflict = conflict != null;
-                Intent editTaskIntent = new Intent(activityInstance, EditTaskActivity.class);
-
-                if(foundConflict) {
-                    editTaskIntent.putExtra("base-task", conflict);
-                    editTaskIntent.putExtra("conflict-task", task);
-                } else {
-                    editTaskIntent.putExtra("base-task", task);
-                    editTaskIntent.putExtra("conflict-task", task);
-                }
-
-                activityInstance.startActivity(editTaskIntent);
             }
         } );
-
     }
 
     @Override
@@ -111,43 +175,30 @@ public class MainActivity extends Activity implements Observer
     @Override
     public void update( Observable observable, Object o )
     {
-        runOnUiThread( ()->
-                       {
-                           populate_list();
-                           final int d = controller.getTasks_downloaded(), u = controller.getTasks_uploaded();
-                           if( d + u > 0 )
+        if( o instanceof ObserverMessage && o == ObserverMessage.Refresh_Main_UI )
+        {
+            runOnUiThread( () ->
                            {
-                               show_text_dialog( "Tasks downloaded: " + d + "\nTasks uploaded: " + u, "Summary" );
-                           }
-                       });
-
+                               populate_list();
+                           } );
+        }
     }
 
     private void populate_list()
     {
-        synchronized( tasks_list )
+        synchronized( controller.getCache() )
         {
-            tasks_list.clear();
+            products_list.clear();
             ids_list.clear();
-            String prefix;
-            for( MyTask t : controller.getAllTasks() )
-            {
-                Log.d( "MAIN-ACTIVITY", "TASK ID: " + t.getId() );
-                Log.d( "MAIN-ACTIVITY", "TASK STATUS: " + t.getStatus() );
+            controller.setCurrent_PD_page( 1 );
+            controller.setDescription_filter( txt_text.getText().toString() );
 
-                prefix = "";
-                if( t.getStatus().equals( "deleted" ) )
-                {
-                    prefix += "[deleted] ";
-                }
-                if( controller.getConflictOldValue( t.getId() ) != null )
-                {
-                    prefix += "[conflict] ";
-                }
-                tasks_list.add( prefix + t.getText() );
-                ids_list.add( t.getId() );
+            for( ProductDescription pd : controller.getCache() )
+            {
+                ids_list.add( pd.getCode() );
+                products_list.add( pd.getDescription() );
             }
-            Log.i( "Count", tasks_list.size() + "" );
+            Log.i( "Count", products_list.size() + "" );
             listAdapter.notifyDataSetChanged();
         }
     }
