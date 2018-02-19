@@ -131,7 +131,7 @@ public class MainActivity extends Activity implements Observer
                                              {
                                                  try
                                                  {
-                                                     Download_Dialog dialog = new Download_Dialog();
+                                                     Progress_Download_Dialog dialog = new Progress_Download_Dialog();
                                                      dialog.setController( controller );
                                                      dialog.show( getFragmentManager(), "Download dialog" );
                                                      controller.start_downloader();
