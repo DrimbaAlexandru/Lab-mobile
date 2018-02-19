@@ -20,7 +20,7 @@ public interface DBProductDescriptionRepository
     @Query( "SELECT * FROM ProductDescription" )
     List< ProductDescription > getAll();
 
-    @Query( "SELECT * FROM ProductDescription WHERE instr( description, :descr ) > 0 ORDER BY code LIMIT :count, :offset" )
+    @Query( "SELECT * FROM ProductDescription WHERE instr( description, :descr ) > 0 ORDER BY code LIMIT :offset, :count " )
     List< ProductDescription > getPage( int count, int offset, String descr );
 
     @Query( "DELETE FROM ProductDescription" )

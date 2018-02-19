@@ -52,6 +52,10 @@ public class DBProductService
 
     public void insertInregistrareProdus( InregistrareProdus rec )
     {
+        DBStatics dbStatics = dbStaticsRepo.getDBStatics();
+        dbStatics.incrementId();
+        rec.setId( dbStatics.getLastId() );
+        dbStaticsRepo.setDBStatics( dbStatics );
         inregistrareProdusRepository.insert( rec );
     }
 

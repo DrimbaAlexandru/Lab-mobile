@@ -40,7 +40,7 @@ public class ProductController extends Observable
     private final int tick_time = 1000;
     private String description_filter = "";
 
-    private List< ProductDescription > cache = new ArrayList<>();
+    private final List< ProductDescription > cache = new ArrayList<>();
 
     public ProductController( ProductService srv )
     {
@@ -63,13 +63,16 @@ public class ProductController extends Observable
         {
             if( ticks % 1 == 0 ) // 1 sec processing
             {
+                List< ProductDescription > pds = get_PD_Page();
                 synchronized( cache )
                 {
                     cache.clear();
-                    cache.addAll( get_PD_Page() );
+                    cache.addAll( pds );
                     setChanged();
                 }
             }
+            notifyObservers( ObserverMessage.Refresh_Main_UI );
+
             if( ticks % 5 == 0 ) // 5 sec processing
             {
                 try
@@ -89,7 +92,6 @@ public class ProductController extends Observable
                 }
             }
 
-            notifyObservers( ObserverMessage.Refresh_Main_UI );
             ticks++;
             try
             {
@@ -179,13 +181,14 @@ public class ProductController extends Observable
                                                     break;
                                                 }
                                                 response = service.updateLocalPDPage( page_in_download );
-                                                page_in_download = service.get_last_downloaded_page();
-                                                last_page = ( service.getTotalElementsCount() + service.getPage_size() - 1 ) / service.getPage_size();
                                                 setChanged();
 
                                                 switch( response )
                                                 {
                                                     case OK:
+                                                        service.set_last_downloaded_page( page_in_download );
+                                                        page_in_download++;
+                                                        last_page = ( service.getTotalElementsCount() + service.getPage_size() - 1 ) / service.getPage_size();
                                                         notifyObservers( ObserverMessage.Download_Page_Downloaded );
                                                         break;
                                                     case NETWORK_ERROR:
@@ -239,7 +242,10 @@ public class ProductController extends Observable
 
     public List< ProductDescription > getCache()
     {
-        return cache;
+        synchronized( cache )
+        {
+            return new ArrayList<>( cache );
+        }
     }
 
     public void setCurrent_PD_page( int current_PD_page )

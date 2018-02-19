@@ -67,6 +67,7 @@ public class ProductService
         {
             db_srv.setLastPageDownloaded( resp.second.getPage() );
             db_srv.insertProductDescriptions( resp.second.getItems() );
+            db_srv.setTotalElemCount( resp.second.getCount() );
         }
         return resp.first;
     }
@@ -78,7 +79,12 @@ public class ProductService
 
     public Pair< ResponseStatus, ProductDescriptionResponse >  getPDPageServer( int page, String text )
     {
-        return rest_srv.getProductDescriptionPage( text, page );
+        Pair< ResponseStatus, ProductDescriptionResponse > rez = rest_srv.getProductDescriptionPage( text, page );
+        if( rez.second != null )
+        {
+            db_srv.setTotalElemCount( rez.second.getCount() );
+        }
+        return rez;
     }
 
     public void addInregistrareProdus( InregistrareProdus inregistrareProdus )
@@ -129,5 +135,10 @@ public class ProductService
     public int get_last_downloaded_page()
     {
         return db_srv.getLastPageDownloaded();
+    }
+
+    public void set_last_downloaded_page( int page )
+    {
+        db_srv.setLastPageDownloaded( page );
     }
 }

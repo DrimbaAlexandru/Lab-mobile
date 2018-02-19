@@ -77,6 +77,7 @@ public class MainActivity extends Activity implements Observer
         list.setOnItemClickListener( ( AdapterView< ? > adapterView, View view, int i, long l ) ->
                                      {
                                          listAdapter.setSelected_position( i );
+                                         selected_item = i;
                                      } );
 
         Button btn_raport = findViewById( R.id.btn_report );
@@ -87,7 +88,7 @@ public class MainActivity extends Activity implements Observer
                                                     {
                                                         try
                                                         {
-                                                            if( selected_item < 0 || selected_item > controller.getCache().size() )
+                                                            if( selected_item < 0 || selected_item >= controller.getCache().size() )
                                                             {
                                                                 throw new Exception( "No item selected" );
                                                             }
