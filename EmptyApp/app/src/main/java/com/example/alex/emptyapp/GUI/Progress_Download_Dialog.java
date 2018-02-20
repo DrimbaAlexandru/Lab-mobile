@@ -12,7 +12,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.alex.emptyapp.Controller.ObserverMessage;
-import com.example.alex.emptyapp.Controller.ProductController;
+import com.example.alex.emptyapp.Controller.MesajeController;
 import com.example.alex.emptyapp.R;
 
 import java.util.Observable;
@@ -24,7 +24,7 @@ import java.util.Observer;
 
 public class Progress_Download_Dialog extends DialogFragment implements Observer
 {
-    private ProductController controller = null;
+    private MesajeController controller = null;
     private Handler mHandler = new Handler();
     private View thisView = null;
 
@@ -79,7 +79,7 @@ public class Progress_Download_Dialog extends DialogFragment implements Observer
         ( ( ProgressBar )( thisView.findViewById( R.id.dialog_progress_Bar ) ) ).setVisibility( View.VISIBLE );
     }
 
-    public void setController( ProductController controller )
+    public void setController( MesajeController controller )
     {
         this.controller = controller;
     }

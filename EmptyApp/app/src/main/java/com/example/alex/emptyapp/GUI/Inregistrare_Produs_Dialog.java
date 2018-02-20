@@ -6,10 +6,9 @@ import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.View;
 
 import com.example.alex.emptyapp.Controller.ObserverMessage;
-import com.example.alex.emptyapp.Controller.ProductController;
+import com.example.alex.emptyapp.Controller.MesajeController;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -20,7 +19,7 @@ import java.util.Observer;
 
 public class Inregistrare_Produs_Dialog extends DialogFragment implements Observer
 {
-    private ProductController controller = null;
+    private MesajeController controller = null;
     private Handler mHandler = new Handler();
 
     @Override
@@ -58,7 +57,7 @@ public class Inregistrare_Produs_Dialog extends DialogFragment implements Observ
         }
     }
 
-    public void setController( ProductController controller )
+    public void setController( MesajeController controller )
     {
         this.controller = controller;
     }

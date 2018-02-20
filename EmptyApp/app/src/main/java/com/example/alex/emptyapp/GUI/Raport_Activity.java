@@ -6,8 +6,8 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.example.alex.emptyapp.Controller.ObserverMessage;
-import com.example.alex.emptyapp.Controller.ProductController;
-import com.example.alex.emptyapp.Controller.ProductControllerSingleton;
+import com.example.alex.emptyapp.Controller.MesajeController;
+import com.example.alex.emptyapp.Controller.MesajeControllerSingleton;
 import com.example.alex.emptyapp.R;
 
 import java.util.Observable;
@@ -15,7 +15,7 @@ import java.util.Observer;
 
 public class Raport_Activity extends Activity implements Observer
 {
-    private ProductController controller = ProductControllerSingleton.getInstance();
+    private MesajeController controller = MesajeControllerSingleton.getInstance();
 
     @Override
     protected void onCreate( Bundle savedInstanceState )

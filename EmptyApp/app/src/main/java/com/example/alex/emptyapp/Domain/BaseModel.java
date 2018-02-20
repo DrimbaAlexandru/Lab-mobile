@@ -9,20 +9,22 @@ public abstract class BaseModel implements Serializable
 {
     @PrimaryKey
     @NonNull
-    private String code;
+    private int id;
 
-    public String getCode() {
-        return code;
+    @NonNull
+    public int getId()
+    {
+        return id;
     }
 
-    public void setCode( String code )
+    public void setId( @NonNull int id )
     {
-        this.code = code;
+        this.id = id;
     }
 
     @Override
     public boolean equals( Object obj )
     {
-        return ( obj instanceof BaseModel ) && ( this.getCode().equals( ( ( BaseModel )obj ).getCode() ) );
+        return ( obj instanceof BaseModel ) && ( this.getId() == ( ( ( BaseModel )obj ).getId() ) );
     }
 }

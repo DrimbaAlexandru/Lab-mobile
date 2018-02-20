@@ -27,6 +27,8 @@
                 android:name=".GUI.Raport_Activity"
                 android:label="@string/title_activity_raport_">
         </activity>
+        <activity android:name=".GUI.Login_Page">
+        </activity>
     </application>
 
 </manifest>

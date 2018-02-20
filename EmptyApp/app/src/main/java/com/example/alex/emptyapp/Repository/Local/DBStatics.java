@@ -13,30 +13,30 @@ public class DBStatics
     @PrimaryKey
     public int dummy_key = 1;
 
+    private String token = "";
+
     private int lastId = 1;
 
-    private int last_page_downloaded = 0;
+    private long last_created = 0;
 
-    private int total_element_count = 0;
-
-    public int getTotal_element_count()
+    public long getLast_created()
     {
-        return total_element_count;
+        return last_created;
     }
 
-    public void setTotal_element_count( int total_element_count )
+    public void setLast_created( long last_created )
     {
-        this.total_element_count = total_element_count;
+        this.last_created = last_created;
     }
 
-    public int getLast_page_downloaded()
+    public void setToken( String token )
     {
-        return last_page_downloaded;
+        this.token = token;
     }
 
-    public void setLast_page_downloaded( int last_page_downloaded )
+    public String getToken()
     {
-        this.last_page_downloaded = last_page_downloaded;
+        return token;
     }
 
     public int getLastId()

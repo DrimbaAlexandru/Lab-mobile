@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.util.Pair;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -16,12 +15,9 @@ import android.widget.EditText;
 import android.widget.ListView;
 
 import com.example.alex.emptyapp.Controller.ObserverMessage;
-import com.example.alex.emptyapp.Controller.ProductController;
-import com.example.alex.emptyapp.Controller.ProductControllerSingleton;
-import com.example.alex.emptyapp.Domain.InregistrareProdus;
-import com.example.alex.emptyapp.Domain.ProductDescription;
+import com.example.alex.emptyapp.Controller.MesajeController;
+import com.example.alex.emptyapp.Controller.MesajeControllerSingleton;
 import com.example.alex.emptyapp.R;
-import com.example.alex.emptyapp.Service.ResponseStatus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +26,7 @@ import java.util.Observer;
 
 public class MainActivity extends Activity implements Observer
 {
-    private ProductController controller = null;
+    private MesajeController controller = null;
     private ListView list;
     private ArrayList< String > ids_list = new ArrayList<>();
     private final List< String > products_list = new ArrayList<>();
@@ -63,11 +59,11 @@ public class MainActivity extends Activity implements Observer
         super.onCreate( savedInstanceState );
         setContentView( R.layout.activity_main );
 
-        ProductControllerSingleton.setContext( getApplicationContext() );
-        controller = ProductControllerSingleton.getInstance();
+        MesajeControllerSingleton.setContext( getApplicationContext() );
+        controller = MesajeControllerSingleton.getInstance();
 
         txt_location = findViewById( R.id.txt_location );
-        txt_quantity = findViewById( R.id.txt_quantity );
+        txt_quantity = findViewById( R.id.txt_mesaj );
         txt_text = findViewById( R.id.txt_text );
 
         list = ( ListView )findViewById( R.id.list_tasks );
