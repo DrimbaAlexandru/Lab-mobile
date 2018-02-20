@@ -33,6 +33,11 @@ public class MesajeController extends Observable
     public MesajeController( MesajeService srv )
     {
         service = srv;
+    }
+
+    public void start_updater_thread()
+    {
+        run_updater = true;
         updater = new Thread( new Runnable()
         {
             @Override
@@ -42,6 +47,11 @@ public class MesajeController extends Observable
             }
         } );
         updater.start();
+    }
+
+    public void stop_updater_thread()
+    {
+        run_updater = false;
     }
 
     private void updater_thread()
@@ -61,10 +71,20 @@ public class MesajeController extends Observable
                     case NETWORK_ERROR:
                         setChanged();
                         notifyObservers( ObserverMessage.Get_Mesaje_Network_Error );
+                        try
+                        {
+                            Thread.sleep( tick_time * 10 );
+                        }
+                        catch( InterruptedException e )
+                        {
+                            e.printStackTrace();
+                            run_updater = false;
+                        }
                         break;
                     case REFUSED_BY_SERVER:
                         setChanged();
-                        notifyObservers( ObserverMessage.Get_Mesaje_Refused);
+                        notifyObservers( ObserverMessage.Get_Mesaje_Refused );
+                        run_updater = false;
                         break;
                 }
             }
@@ -82,7 +102,7 @@ public class MesajeController extends Observable
         }
     }
 
-    private List< Mesaj > get_All_Mesaje()
+    public List< Mesaj > get_All_Mesaje()
     {
         return service.getAllMesaje_local();
     }

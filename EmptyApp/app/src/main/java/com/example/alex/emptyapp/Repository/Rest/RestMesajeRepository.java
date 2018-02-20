@@ -26,9 +26,9 @@ public interface RestMesajeRepository
     @GET( "message" )
     Call< List< Mesaj > > getMesaje( @Header( "token" ) String token, @Query( "created" ) long created );
 
-    @POST
+    @POST( "message" )
     Call< Void > postMessage( @Header( "token" ) String token, @Body PostMessageDTO body );
 
-    @POST
+    @POST( "logout" )
     Call< Void > logout( @Header( "token" ) String token );
 }

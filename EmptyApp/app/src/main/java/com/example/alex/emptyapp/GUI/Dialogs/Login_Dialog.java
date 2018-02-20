@@ -1,4 +1,4 @@
-package com.example.alex.emptyapp.GUI;
+package com.example.alex.emptyapp.GUI.Dialogs;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -22,7 +22,7 @@ import java.util.Observer;
  * Created by Alex on 19.02.2018.
  */
 
-public class Progress_Download_Dialog extends DialogFragment implements Observer
+public class Login_Dialog extends DialogFragment implements Observer
 {
     private MesajeController controller = null;
     private Handler mHandler = new Handler();
@@ -32,30 +32,20 @@ public class Progress_Download_Dialog extends DialogFragment implements Observer
     public Dialog onCreateDialog( Bundle savedInstanceState )
     {
         AlertDialog.Builder builder = new AlertDialog.Builder( getActivity() );
-        builder.setNegativeButton( "Cancel", new DialogInterface.OnClickListener()
+        builder.setMessage( "" ).setTitle( "Logging in..." ).setNegativeButton( "  .  ", new DialogInterface.OnClickListener()
         {
-            public void onClick( DialogInterface dialog, int id )
+            @Override
+            public void onClick( DialogInterface dialogInterface, int i )
             {
-                controller.stop_download();
-                dismiss();
+                Log.i( "", "Da nu cumva sa te inchizi" );
             }
-        } ).setTitle( "Downloading " + ( controller.getPage_in_download() ) + "/" + ( controller.getTotalElementsCount() + controller.get_page_size() - 1 ) / controller.get_page_size() );
-        // Create the AlertDialog object and return it
+        } );
 
         thisView = getActivity().getLayoutInflater().inflate( R.layout.progress_bar_dialog, null );
         builder.setView( thisView );
+        // Create the AlertDialog object and return it
 
         return builder.create();
-    }
-
-    @Override
-    public void onDismiss( DialogInterface dialog )
-    {
-        super.onDismiss( dialog );
-        if( controller != null )
-        {
-            controller.stop_download();
-        }
     }
 
     @Override
@@ -76,7 +66,7 @@ public class Progress_Download_Dialog extends DialogFragment implements Observer
         {
             controller.addObserver( this );
         }
-        ( ( ProgressBar )( thisView.findViewById( R.id.dialog_progress_Bar ) ) ).setVisibility( View.VISIBLE );
+        //( ( ProgressBar )( thisView.findViewById( R.id.dialog_progress_Bar ) ) ).setVisibility( View.VISIBLE );
     }
 
     public void setController( MesajeController controller )
@@ -89,27 +79,33 @@ public class Progress_Download_Dialog extends DialogFragment implements Observer
     {
         if( controller != null && this.getDialog() instanceof AlertDialog )
         {
-            Log.i( "Download Dialog", "UPDATE" );
+            Log.i( "Login Dialog", "UPDATE" );
             mHandler.post( () ->
                            {
-                               Log.i( "Download Dialog", "POST" );
-
                                AlertDialog this_dialog = ( AlertDialog )( this.getDialog() );
 
-                               this_dialog.setTitle( "Downloading " + ( controller.getPage_in_download() ) + "/" + ( controller.getTotalElementsCount() + controller.get_page_size() - 1 ) / controller.get_page_size() );
                                if( o instanceof ObserverMessage )
                                {
                                    switch( ( ObserverMessage )o )
                                    {
-                                       case Download_Completed:
-                                           ( ( TextView )( thisView.findViewById( R.id.dialog_txt ) ) ).setText( "Download Complete!" );
+                                       case Login_Completed:
+                                           this_dialog.dismiss();
+                                           break;
+                                       case Login_Network_Error:
+                                           ( ( TextView )( thisView.findViewById( R.id.dialog_txt ) ) ).setText( "Login error! A network error occured." );
+                                           this_dialog.setButton( DialogInterface.BUTTON_NEGATIVE, "Close", ( DialogInterface dialog, int id ) ->
+                                           {
+                                               dismiss();
+                                           } );
                                            ( ( ProgressBar )( thisView.findViewById( R.id.dialog_progress_Bar ) ) ).setVisibility( View.INVISIBLE );
                                            break;
-                                       case Download_Page_Downloaded:
-                                           ( ( TextView )( thisView.findViewById( R.id.dialog_txt ) ) ).setText( "Downloaded page " + controller.get_last_downloaded_page() );
-                                           break;
-                                       case Download_Failed:
-                                           ( ( TextView )( thisView.findViewById( R.id.dialog_txt ) ) ).setText( "Failed downloading page " + controller.getPage_in_download() );
+                                       case Login_Refused:
+                                           ( ( TextView )( thisView.findViewById( R.id.dialog_txt ) ) ).setText( "Login failed! The server refused the credentials" );
+                                           this_dialog.setButton( DialogInterface.BUTTON_NEGATIVE, "Close", ( DialogInterface dialog, int id ) ->
+                                           {
+                                               dismiss();
+                                           } );
+                                           ( ( ProgressBar )( thisView.findViewById( R.id.dialog_progress_Bar ) ) ).setVisibility( View.INVISIBLE );
                                            break;
                                    }
                                }

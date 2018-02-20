@@ -46,6 +46,7 @@ public class DBMesajeService
         DBStatics statics = dbStaticsRepo.getDBStatics();
         statics.setLast_created( max_created );
         mesajeRepository.batchInsert( mesaje );
+        dbStaticsRepo.setDBStatics( statics );
     }
 
     public List< Mesaj > getAllMesaje()

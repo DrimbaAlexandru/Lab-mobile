@@ -1,4 +1,4 @@
-package com.example.alex.emptyapp.GUI;
+package com.example.alex.emptyapp.GUI.Dialogs;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -7,9 +7,13 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.example.alex.emptyapp.Controller.ObserverMessage;
 import com.example.alex.emptyapp.Controller.MesajeController;
+import com.example.alex.emptyapp.R;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -17,17 +21,18 @@ import java.util.Observer;
 /**
  * Created by Alex on 19.02.2018.
  */
-
-public class Download_Dialog extends DialogFragment implements Observer
+/*
+public class Progress_Download_Dialog extends DialogFragment implements Observer
 {
     private MesajeController controller = null;
     private Handler mHandler = new Handler();
+    private View thisView = null;
 
     @Override
     public Dialog onCreateDialog( Bundle savedInstanceState )
     {
         AlertDialog.Builder builder = new AlertDialog.Builder( getActivity() );
-        builder.setMessage( "" ).setNegativeButton( "Cancel", new DialogInterface.OnClickListener()
+        builder.setNegativeButton( "Cancel", new DialogInterface.OnClickListener()
         {
             public void onClick( DialogInterface dialog, int id )
             {
@@ -36,6 +41,10 @@ public class Download_Dialog extends DialogFragment implements Observer
             }
         } ).setTitle( "Downloading " + ( controller.getPage_in_download() ) + "/" + ( controller.getTotalElementsCount() + controller.get_page_size() - 1 ) / controller.get_page_size() );
         // Create the AlertDialog object and return it
+
+        thisView = getActivity().getLayoutInflater().inflate( R.layout.progress_bar_dialog, null );
+        builder.setView( thisView );
+
         return builder.create();
     }
 
@@ -67,6 +76,7 @@ public class Download_Dialog extends DialogFragment implements Observer
         {
             controller.addObserver( this );
         }
+        ( ( ProgressBar )( thisView.findViewById( R.id.dialog_progress_Bar ) ) ).setVisibility( View.VISIBLE );
     }
 
     public void setController( MesajeController controller )
@@ -92,13 +102,14 @@ public class Download_Dialog extends DialogFragment implements Observer
                                    switch( ( ObserverMessage )o )
                                    {
                                        case Download_Completed:
-                                           this_dialog.setMessage( "Download Complete!" );
+                                           ( ( TextView )( thisView.findViewById( R.id.dialog_txt ) ) ).setText( "Download Complete!" );
+                                           ( ( ProgressBar )( thisView.findViewById( R.id.dialog_progress_Bar ) ) ).setVisibility( View.INVISIBLE );
                                            break;
                                        case Download_Page_Downloaded:
-                                           this_dialog.setMessage( "Downloaded page " + controller.get_last_downloaded_page() );
+                                           ( ( TextView )( thisView.findViewById( R.id.dialog_txt ) ) ).setText( "Downloaded page " + controller.get_last_downloaded_page() );
                                            break;
                                        case Download_Failed:
-                                           this_dialog.setMessage( "Failed downloading page " + controller.getPage_in_download() );
+                                           ( ( TextView )( thisView.findViewById( R.id.dialog_txt ) ) ).setText( "Failed downloading page " + controller.getPage_in_download() );
                                            break;
                                    }
                                }
@@ -107,3 +118,4 @@ public class Download_Dialog extends DialogFragment implements Observer
         }
     }
 }
+*/

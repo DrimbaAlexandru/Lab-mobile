@@ -10,9 +10,9 @@
             android:label="@string/app_name"
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
-            android:theme="@style/AppTheme">
+            android:theme="@style/AppTheme">Login_Page
         <activity
-                android:name=".GUI.MainActivity"
+                android:name=".GUI.Login_Page"
                 android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -23,11 +23,7 @@
                 <action android:name="android.intent.action.ATTACH_DATA"/>
             </intent-filter>
         </activity>
-        <activity
-                android:name=".GUI.Raport_Activity"
-                android:label="@string/title_activity_raport_">
-        </activity>
-        <activity android:name=".GUI.Login_Page">
+        <activity android:name=".GUI.MainActivity">
         </activity>
     </application>
 

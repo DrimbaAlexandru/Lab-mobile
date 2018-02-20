@@ -1,4 +1,4 @@
-package com.example.alex.emptyapp.GUI;
+package com.example.alex.emptyapp.GUI.Dialogs;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -6,9 +6,14 @@ import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.example.alex.emptyapp.Controller.ObserverMessage;
 import com.example.alex.emptyapp.Controller.MesajeController;
+import com.example.alex.emptyapp.R;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -17,22 +22,27 @@ import java.util.Observer;
  * Created by Alex on 19.02.2018.
  */
 
-public class Inregistrare_Produs_Dialog extends DialogFragment implements Observer
+public class Logout_Dialog extends DialogFragment implements Observer
 {
     private MesajeController controller = null;
     private Handler mHandler = new Handler();
+    private View thisView = null;
 
     @Override
     public Dialog onCreateDialog( Bundle savedInstanceState )
     {
         AlertDialog.Builder builder = new AlertDialog.Builder( getActivity() );
-        builder.setMessage( "" ).setNegativeButton( "Close", new DialogInterface.OnClickListener()
+        builder.setMessage( "" ).setTitle( "Logging out..." ).setNegativeButton( "  .  ", new DialogInterface.OnClickListener()
         {
-            public void onClick( DialogInterface dialog, int id )
+            @Override
+            public void onClick( DialogInterface dialogInterface, int i )
             {
-                dismiss();
+                Log.i( "", "Da nu cumva sa te inchizi" );
             }
         } );
+
+        thisView = getActivity().getLayoutInflater().inflate( R.layout.progress_bar_dialog, null );
+        builder.setView( thisView );
         // Create the AlertDialog object and return it
         return builder.create();
     }
@@ -55,6 +65,7 @@ public class Inregistrare_Produs_Dialog extends DialogFragment implements Observ
         {
             controller.addObserver( this );
         }
+        ( ( ProgressBar )( thisView.findViewById( R.id.dialog_progress_Bar ) ) ).setVisibility( View.VISIBLE );
     }
 
     public void setController( MesajeController controller )
@@ -67,25 +78,36 @@ public class Inregistrare_Produs_Dialog extends DialogFragment implements Observ
     {
         if( controller != null && this.getDialog() instanceof AlertDialog )
         {
+            Log.i( "Logout Dialog", "UPDATE" );
             mHandler.post( () ->
                            {
                                AlertDialog this_dialog = ( AlertDialog )( this.getDialog() );
+
                                if( o instanceof ObserverMessage )
                                {
                                    switch( ( ObserverMessage )o )
                                    {
-                                       case Inregistrare_Succes:
-                                           this_dialog.setMessage( "Inregistrat cu succes!" );
+                                       case Logout_Completed:
+                                           this_dialog.dismiss();
                                            break;
-                                       case Inregistrare_Refuzata:
-                                           this_dialog.setMessage( "Inregistrare refuzata de server!" );
+                                       case Logout_Network_Error:
+                                           ( ( TextView )( thisView.findViewById( R.id.dialog_txt ) ) ).setText( "Logout error! A network error occured." );
+                                           this_dialog.setButton( DialogInterface.BUTTON_NEGATIVE, "Close", ( DialogInterface dialog, int id ) ->
+                                           {
+                                               dismiss();
+                                           } );
                                            break;
-                                       case Inregistrare_Eroare_Retea:
-                                           this_dialog.setMessage( "Eroare de retea!" );
+                                       case Logout_Refused:
+                                           ( ( TextView )( thisView.findViewById( R.id.dialog_txt ) ) ).setText( "Logout failed!" );
+                                           this_dialog.setButton( DialogInterface.BUTTON_NEGATIVE, "Close", ( DialogInterface dialog, int id ) ->
+                                           {
+                                               dismiss();
+                                           } );
                                            break;
                                    }
                                }
                            } );
+
         }
     }
 }

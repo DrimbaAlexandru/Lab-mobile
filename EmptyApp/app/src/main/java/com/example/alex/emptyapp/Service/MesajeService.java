@@ -95,11 +95,8 @@ public class MesajeService
     public ResponseStatus logout()
     {
         ResponseStatus responseStatus = rest_srv.logout( db_srv.get_token() );
-        if( responseStatus == ResponseStatus.OK )
-        {
-            db_srv.resetMesaje();
-            db_srv.set_token( "" );
-        }
+        db_srv.resetMesaje();
+        db_srv.set_token( "" );
         return responseStatus;
     }
 
